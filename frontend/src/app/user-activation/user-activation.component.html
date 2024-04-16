@@ -1,0 +1,92 @@
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kode+Mono:wght@400..700&display=swap" rel="stylesheet">
+
+<div class="formMaster">
+    <div class="form-group" style="margin-left: 10%;">
+        <form style="margin-left: 10%">
+            <div class="container">
+                <div class="form-list">
+                    <h3 style="text-align: center;"><span class="capsHighlighter">U</span>ser <span
+                            class="capsHighlighter">S</span>ignUp <span class="capsHighlighter">A</span>pproval &<span
+                            class="capsHighlighter"> R</span>ole Change</h3>
+                    <table class="table" #table id="exportable">
+                        <thead>
+                            <tr class="trhead">
+                                <th colspan="5">
+                                </th>
+                            </tr>
+                            <tr>
+                                <th>Sl.No</th>
+                                <th>Username</th>
+                                <th>Role</th>
+                                <th>Approval</th>
+                                <th>Change Role</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            <tr *ngFor="let tag of jsonarrayconvert; let i = index">
+
+                                <td>{{i+1}}</td>
+                                <td>{{tag.username}}</td>
+                                <td>{{tag.role}}</td>
+                                <td><button type="submit" class="button" style="background-color: #ffa500;"
+                                        (click)="approved(tag)">Approve</button></td>
+                                <td><button type="submit" class="button" style="background-color: crimson;"
+                                        (click)="roleChangeRequest(tag);">Role Change</button>
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="w3-container">
+    <div id="changeRoleModal" class="w3-modal">
+        <div class="w3-modal-content w3-card-4 w3-animate-zoom" style="max-width:600px">
+            <div class="close-center"><br>
+                <span onclick="document.getElementById('changeRoleModal').style.display='none'"
+                    title="Close Modal"><strong>&times;</strong></span>
+            </div>
+            <div class="headerModal">
+                Change Role
+            </div>
+            <form class="w3-container">
+                <div class="w3-section">
+                    <ul class="form-list">
+                        <li class="form-list__row">
+                            <label class="cllbl">Change Role</label>
+                            <div class='pwdEyeFrame'>
+                                <select name="registerrole" id="roregisterrolele" [(ngModel)]="rolechangeapprove"
+                                    required>
+                                    <option disabled selected>-- Select Role --</option>
+                                    <option value="Administrator">Administrator</option>
+                                    <option value="Supervisor">Supervisor</option>
+                                    <option value="dbaUser">dbaUser</option>
+                                </select>
+                            </div>
+                            <div>
+                                <p style="margin: 7px;"><span *ngIf="rolechangeapprove">Modified
+                                        Role:<strong>&nbsp;{{rolechangeapprove}}</strong></span></p>
+                            </div>
+                        </li>
+                        <li>
+                            <button style="color: black;" type="button" class="button" (click)="rolechange();">Update & Approve</button>
+                        </li>
+                    </ul>
+                </div>
+            </form>
+
+            <div class="closeModal">
+                <button class="buttonClose" onclick="document.getElementById('changeRoleModal').style.display='none'"
+                    type="button">Cancel</button>
+            </div>
+
+        </div>
+    </div>
+</div>

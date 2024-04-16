@@ -1,0 +1,43 @@
+table {
+    border-collapse: collapse;
+    /* padding-left: 50px;
+    padding-right: 50px; */
+    margin-left: 20%;
+    margin-top: 1%;
+    padding: 20px;
+    background-color: #18283b;
+    border-radius: 10px;
+    box-shadow: 3px 3px 20px rgba(0, 0, 0, 0.1);
+    color: white;
+    width: 70%;
+    font-size: 18px;
+    font-family: Kode Mono;
+}
+
+p {
+    padding: 15px;
+    margin: 2%;
+}
+ul, li {
+    
+    margin: 2%; 
+}
+
+h3,
+h4,
+h5 {
+    font-family: Kode Mono;
+}
+
+th {
+    color: #fde89b;
+    font-size: 14px;
+    text-align: center;
+}
+
+tr,
+td {
+    padding-left: 50px;
+    padding-right: 50px;
+    text-shadow: 3px 3px 20px rgb(0, 0, 0);
+}

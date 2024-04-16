@@ -1,0 +1,150 @@
+.container {
+    display: flex;
+    place-items: center;
+    justify-content: center;
+    align-items: center;
+    height: 90vh;
+    font-family: "Chakra Petch", sans-serif;
+    /* Adjust height to cover the entire viewport */
+    width: 100%;
+    /* Adjust width to cover the entire viewport */
+    color: #FFFFF0;
+    padding: 25px;
+    box-sizing: border-box;
+    /* Ensures padding is included in width calculation */
+}
+
+label {
+    color: #fde89b;
+}
+
+.sectioninput {
+    margin-bottom: 20px;
+}
+
+.form-list {
+    background-color: #18283b;
+    padding: 50px;
+    width: 50%;
+    border-radius: 10px;
+    box-shadow: 3px 3px 20px rgba(0, 0, 0, 0.1);
+}
+
+input,
+select {
+    width: calc(100% - 16px);
+    /* Adjust width to accommodate padding */
+    min-height: 30px;
+    padding: 3px;
+    letter-spacing: 0.5px;
+    border: 0;
+    border-bottom: 2px solid red;
+
+}
+
+input[type="date"] {
+    display: inline-block;
+    position: relative;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+    background: transparent;
+    bottom: 0;
+    color: transparent;
+    cursor: pointer;
+    height: auto;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: auto;
+}
+
+input[type="time"] {
+    position: relative;
+}
+
+input[type="time"]::-webkit-calendar-picker-indicator {
+    display: block;
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    background: transparent;
+}
+
+option {
+    background-color: #f5f6fa;
+    color: black;
+}
+
+input:valid {
+    border-bottom: 3px solid #FF5F1F;
+}
+
+input:focus,
+select:focus {
+    outline: none;
+    border-bottom: 4px solid #fbcf34;
+}
+
+select {
+    width: calc(100% - 10px);
+    min-height: 38px;
+    padding: 3px;
+    letter-spacing: 0.5px;
+    /* Adjust width to accommodate padding */
+    border-bottom: 3px solid #FF5F1F;
+}
+
+.button {
+    display: flex;
+    place-items: center;
+    justify-content: center;
+    align-items: center;
+    color: #ffffff;
+    background-color: #ffa500;
+    padding: 12px 25px;
+    font-size: 12px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border: 0;
+    border-radius: 2px;
+    outline: 0;
+    box-shadow: 3px 3px 20px rgba(0, 0, 0, 0.2);
+    transition: all .2s;
+}
+
+.button:hover,
+.button:active,
+.button:focus {
+    -ms-transform: scale(1.1);
+    transform: scale(1.1);
+}
+
+.input-set {
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.input-set .form-group {
+    margin-right: 10px;
+}
+
+.sequence {
+    float: right;
+    color: #f1cb3e;
+    font-weight: 500;
+}
+
+.sequence:hover {
+    color: #FFFFF0;
+}
+
+.sequel {
+    text-align: start;
+    color: #FFFFF0;
+    font-weight: 500;
+    padding-bottom: 8px;
+}

@@ -1,0 +1,89 @@
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Arima:wght@300;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Trirong">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Sofia">
+<link
+  href="https://fonts.googleapis.com/css2?family=Arima:wght@200;300;500;600;700&family=Changa:wght@500&family=Russo+One&family=Secular+One&display=swap"
+  rel="stylesheet">
+
+
+<div *ngIf="isLoggedIn">
+  <a style="float: right; line-height:10px; margin: 10px;" value="Logout" (click)="logOutAlert()"><i
+      class="fa fa-sign-out" aria-hidden="true" style="font-size:20px"></i>&nbsp;Logout</a>
+</div>
+<!-- <div *ngIf="isLoggedIn">
+  <button class="bottom" (click)="returnBottom()">Go To Bottom <i class="fa fa-arrow-down"
+      aria-hidden="true"></i></button>
+</div> -->
+
+<script src="https://kit.fontawesome.com/f908fb3213.js" crossorigin="anonymous"></script>
+<div *ngIf="isLoggedIn">
+
+  <div id="nav-bar" #navbar>
+    <input #navToggle id="nav-toggle" type="checkbox" />
+    <div id="nav-header" #navHeader><a id="nav-title" #navTitle href="#"><i class="fa-brands fa-codepen"></i><span
+          style="font-size: 14px; color: #FFFFF0;">&nbsp;Hey, {{dudename}}</span></a>
+      <label for="nav-toggle"><i class="fas fa-sliders-h"></i></label>
+      <hr />
+    </div>
+    <div id="nav-content" #navContent>
+      <div class="nav-button" (click)="notification();">&nbsp;<i
+          class="fa-solid fa-bell"></i><span>&nbsp;Notifications</span></div>
+      <div class="nav-button" (click)="status();">&nbsp;<i
+          class="fa-solid fa-bars-progress"></i><span>&nbsp;Status</span></div>
+      <div class="nav-button" (click)="reports();">&nbsp;<i
+          class="fa-solid fa-file-invoice"></i><span>&nbsp;Reports</span></div>
+      <div class="nav-button" (click)="customReports();">&nbsp;<i
+          class="fa-solid fa-sheet-plastic"></i><span>&nbsp;Customised Reports</span></div>
+      <div class="nav-button" (click)="activation();">&nbsp;<i
+          class="fa-solid fa-person-circle-check"></i><span>&nbsp;User Activation</span></div>
+      <hr />
+      <div class="nav-button" (click)="icms();">&nbsp;<i class="fa-solid fa-business-time"></i><span>&nbsp;ICMS</span>
+      </div>
+      <div class="nav-button" (click)="ntes();">&nbsp;<i class="fa-solid fa-train"></i><span>&nbsp;NTES</span></div>
+      <div class="nav-button" (click)="irctc();">&nbsp;<i class="fa-solid fa-ticket"></i><span>&nbsp;IRCTC</span></div>
+      <div class="nav-button" (click)="primes();">&nbsp;<i class="fa-solid fa-database"></i><span>&nbsp;PRIMES</span>
+      </div>
+      <div class="nav-button" (click)="govdotin();">&nbsp;<i
+          class="fa-solid fa-envelopes-bulk"></i><span>&nbsp;GOV.IN</span>
+      </div>
+      <hr />
+      <div class="nav-button" (click)="techies();">&nbsp;&nbsp;<i class="fa-solid fa-people-group"></i><span>&nbsp;IT
+          Team</span></div>
+      <div id="nav-content-highlight" #navContenthighlight></div>
+    </div>
+    <input id="nav-footer-toggle" type="checkbox" #navfootertoggle (click)="cancelAutoClose();" />
+    <div id="nav-footer" #navfooter>
+      <div id="nav-footer-heading" #navfooterheading>
+        <div id="nav-footer-avatar" #navfooteravatar>
+          <!-- <img src="https://gravatar.com/avatar/4474ca42d303761c2901fa819c4f2547" /> -->
+          <img src="assets/images/dp.png" alt="">
+        </div>
+        <div id="nav-footer-titlebox" #navfootertitlebox><a id="nav-footer-title" #navfootertitle href="#"
+            target="_blank">{{username}}</a><span id="nav-footer-subtitle" #navfootersubtitl>{{roleindex}}</span></div>
+        <label for="nav-footer-toggle"><i class="fas fa-caret-up"></i></label>
+      </div>
+      <div id="nav-footer-content" #navfootercontent>
+        <p>Hey, {{greet}}</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+<router-outlet></router-outlet>
+<div *ngIf="isLoggedIn" class="GoToTopButton">
+  <button class="top" (click)="returnTop()"><span></span></button>
+</div>
+<br>
+<div class="newcopyright">
+  <p>&copy; Copyright {{CRyear}}, IT-Cell/CCM/PM, Southern Railway.</p>
+</div>
+
+<!-- <div class="fthead" *ngIf="isLoggedIn">
+  <p class="footer">
+    <strong><b>&copy;</b> Copyright <span style="color: navy;"><b>{{CRyear}}</b></span>, All Rights
+      Reserved. Information Technology and Innnovation Cell, CCM/PM/O, Southern Railway®™
+    </strong>
+  </p>
+</div> -->

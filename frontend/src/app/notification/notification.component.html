@@ -1,0 +1,116 @@
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link
+    href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
+    rel="stylesheet">
+
+<div class="formMaster">
+    <div class="form-group" style="margin-left: 10%;">
+        <form novalidate #form="ngForm">
+            <div class="container">
+                <div class="form-list">
+                    <div class="col-sm-6 form-group">
+                        <!-- Input fields for notification data -->
+                        <div class="sectioninput">
+                            <label for="notification_number">Notification Number</label>
+                            <input style="text-transform:uppercase" type="text" id="notification_number"
+                                placeholder="Enter Notification Number" name="notification_number"
+                                [(ngModel)]="notification_number">
+                        </div>
+                        <div class="sectioninput">
+                            <label for="notification_date">Date Of Notification Created</label>
+                            <input type="date" id="notification_date" name="notification_date"
+                                [(ngModel)]="notification_date">
+                        </div>
+                        <div class="sectioninput">
+                            <label for="notification_received_date">Date Of Notification Received</label>
+                            <input type="date" id="notification_received_date" name="notification_received_date"
+                                [(ngModel)]="notification_received_date">
+                        </div>
+                        <div class="sectioninput">
+                            <label for="notification_received_time">Notification Received Time</label>
+                            <input type="time" id="notification_received_time" name="notification_received_time"
+                                [(ngModel)]="notification_received_time">
+                        </div>
+                        <div class="sectioninput">
+                            <label for="reception_mode">Mode of Reception</label>
+                            <div class="sectioninput">
+                                <select name="reception_mode" id="reception_mode" [(ngModel)]="reception_mode">
+                                    <option disabled selected>-- Select --</option>
+                                    <option value="whatsapp">WhatsApp</option>
+                                    <option value="Telegram">Telegram</option>
+                                    <option value="Mail">Mail</option>
+                                    <option value="Officers">Officers</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="sectioninput">
+                            <div *ngFor="let inputSet of inputSets; let i = index">
+                                <div class="sequel">
+                                    <p><span>Case Sequel</span><span
+                                            style="color: #FF5F1F;"><strong>&nbsp;{{i+1}}</strong></span></p>
+                                </div>
+                                <div class="input-set">
+                                    <div class="form-group">
+                                        <label for="activity_type{{i+1}}">Activity Type</label>
+                                        <select name="activity_type{{i+1}}" id="activity_type{{i+1}}"
+                                            [(ngModel)]="inputSet.activity_type" required>
+                                            <option disabled selected>-- Select an activity --</option>
+                                            <option value="refiring">Re-Firing</option>
+                                            <option value="switch setting">Switch Setting</option>
+                                            <option value="add coach">Add Coach</option>
+                                            <option value="add route class">Add Route Class</option>
+                                            <option value="add isl">Add ISL</option>
+                                            <option value="tt change">TT-Change</option>
+                                            <option value="quota distribution">Quota Distribution</option>
+                                            <option value="new train">New Train</option>
+                                            <option value="specials">Specials</option>
+                                            <option value="frequent change">Frequent Change</option>
+                                            <option value="src-dstn extn">Src/Destn Extn</option>
+                                            <option value="token lost">Token Lost (Non-Train Activity)</option>
+                                            <option value="tdm">TDM (Non-Train Activity)</option>
+                                            <option value="other">Other</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="trainaction{{i+1}}">Train/Action</label>
+                                        <input type="text" id="trainaction{{i+1}}" name="trainaction{{i+1}}"
+                                            [(ngModel)]="inputSet.trainaction" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="efromdate{{i+1}}">Effective From Date</label>
+                                        <input type="date" id="efromdate{{i+1}}" name="efromdate{{i+1}}"
+                                            [(ngModel)]="inputSet.efromdate" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="etodate{{i+1}}">Effective To Date</label>
+                                        <input type="date" id="etodate{{i+1}}" name="etodate{{i+1}}"
+                                            [(ngModel)]="inputSet.etodate" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- <div><button (click)="show();">Show</button></div> //This will display the data entered in the action segment-->
+                        </div>
+                        <div class="sectioninput">
+                            <span class="sequence" (click)="addInputSet()"><i
+                                    class="fa-solid fa-circle-plus"></i>&nbsp;Add sequence</span>
+                        </div>
+                        <div class="sectioninput">
+                            <label for="pdffilenotification">Notification PDF</label>
+                            <input type="file" id="pdffilenotification" accept=".pdf"
+                                (change)="onNotifypdfSelected($event, 'notificationpdf')">
+                            <span *ngIf="pdfname">Successfully Uploaded: <strong>{{pdfname}}</strong></span>
+                        </div>
+                        <div *ngIf="error"  class="sectioninput">
+                          <span style="color: red;">{{errorMsg}}</span>
+                        </div>
+                        <!-- Button to submit the form -->
+                        <div>
+                            <button type="submit" (click)="RegisterNotifyerrorCheck()" class="button">Sumbit</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

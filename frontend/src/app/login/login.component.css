@@ -1,0 +1,20 @@
+.logocarrier {
+  margin-left: 120px;
+}
+
+.bg1 {
+  height: 80px;
+  width: 80px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  margin: 0;
+  padding-top: 10px;
+  padding-bottom: 50px;
+  font-weight: 600;
+}

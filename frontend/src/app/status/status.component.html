@@ -1,0 +1,384 @@
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kode+Mono:wght@400..700&display=swap" rel="stylesheet">
+
+<div class="formMaster">
+    <div class="form-group" style="margin-left: 10%;">
+        <div class="container">
+            <h3 style="text-align: center;">Work Status | Job Assign Manifest</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Sl. No.</th>
+                        <th>Notification Number</th>
+                        <th>Activity Type</th>
+                        <th>Action/Train</th>
+                        <th>EFD</th>
+                        <th>ETD</th>
+                        <th>PDF</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let list of jsonarrayconvert; let i = index">
+                        <td>
+                            {{i+1}}
+                        </td>
+                        <td>
+                            {{list.notification_number}}
+                        </td>
+                        <td>
+                            {{list.activity_type}}
+                        </td>
+                        <td>
+                            {{list.trainaction}}
+                        </td>
+                        <td>
+                            {{list.effectivefromdate | date: 'dd/MM/yyyy'}}
+                        </td>
+                        <td>
+                            {{list.effectivetodate | date: 'dd/MM/yyyy'}}
+                        </td>
+                        <td class="pdfIcon">
+                            <span *ngIf="list.pdfstatus===true"><a (click)="openPDF(list._id);"><i
+                                        class="fa-regular fa-file-pdf"></i></a></span>
+                        </td>
+                        <td *ngIf="list.notify_status==='Open'">
+                            <button class="buttonClose" (click)="assigneduservalue(list)"
+                                type="button">{{list.notify_status}}</button>
+                        </td>
+                        <td *ngIf="list.notify_status==='processing'">
+                            <button class="buttonClose" (click)="assigneduservalue(list)"
+                                type="button">{{list.notify_status}}-{{list.jobpickedby}}</button>
+                        </td>
+                        <td *ngIf="list.notify_status==='Awaited for Approval'">
+                            <button class="buttonClose" (click)="assigneduservalue(list)"
+                                type="button">{{list.notify_status}}</button>
+                        </td>
+                        <td *ngIf="list.notify_status==='Closed'">
+                            <button class="buttonClose" (click)="assigneduservalue(list)" type="button">Alert</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="w3-container">
+    <div id="pdfOpenModal" class="w3-modal">
+        <div class="w3-modal-content w3-card-4 w3-animate-zoom" style="max-width:900px; max-height: 950px;">
+            <div class="close-center"><br>
+                <span onclick="document.getElementById('pdfOpenModal').style.display='none'"
+                    title="Close Modal"><strong>&times;</strong></span>
+            </div>
+            <div class="headerModal">
+                PDF Viewer
+            </div>
+            <form class="w3-container">
+                <div class="w3-section">
+                    <ul class="form-list">
+                        <li class="form-list__row">
+                            <div>
+                                <p><span *ngIf="ProgLoaded===false"><strong>Loading please wait...</strong></span></p>
+                                <div>
+                                    <embed [src]="pdfUrl" type="application/pdf" width="100%" height="500px">
+                                </div>
+
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </form>
+
+            <div class="closeModal">
+                <button class="buttonClose" onclick="document.getElementById('pdfOpenModal').style.display='none'"
+                    type="button">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- new created backend worker -->
+
+<div class="w3-container">
+    <div id="jobassigned" class="w3-modal">
+        <div class="w3-modal-content w3-card-4 w3-animate-zoom" style="max-width:600px">
+            <div class="close-center"><br>
+                <span onclick="document.getElementById('jobassigned').style.display='none'"
+                    title="Close Modal"><strong>&times;</strong></span>
+            </div>
+            <div class="headerModal">
+                Job Assigning
+            </div>
+            <form class="w3-container">
+                <div class="w3-section">
+                    <ul class="form-list">
+                        <li class="form-list__row">
+                            <div>
+                                <div>
+                                    <h3>Do you wish to pickup this Notification? Confirming will make you assigned to
+                                        this task.</h3><br />
+                                    <button class="buttonCNF" (click)="assigneduser()" type="button" style="align-content: center;">Yeah,
+                                        assign!</button>
+                                </div>
+
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </form>
+
+            <div class="closeModal">
+                <button class="buttonClose" onclick="document.getElementById('jobassigned').style.display='none'"
+                    type="button">Exit</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+<div class="w3-container">
+    <div id="completed" class="w3-modal">
+        <div class="w3-modal-content w3-card-4 w3-animate-zoom" style="max-width:600px">
+            <div class="close-center"><br>
+                <span onclick="document.getElementById('completed').style.display='none'"
+                    title="Close Modal"><strong>&times;</strong></span>
+            </div>
+            <div class="headerModal">
+                Self Cross-examination
+            </div>
+            <form class="w3-container">
+                <div class="w3-section">
+                    <ul class="form-list">
+                        <li class="form-list__row">
+                            <!-- <h3>Youself cross check with your activity done in System </h3> -->
+                            <div style="color: red; text-align: center;">
+                                <h5><strong>**Re-Confirm your activity by entering the below details correctly**</strong></h5>
+                            </div>
+                        </li>
+                        <li class="form-list__row">
+                            <div>
+                                <label for="activity_type">Activity Type</label>
+                                <select name="activity_type" id="activity_type" [(ngModel)]="activity_type" required>
+                                    <option disabled selected>-- Select an activity --</option>
+                                    <option value="refiring">Re-Firing</option>
+                                    <option value="switch setting">Switch Setting</option>
+                                    <option value="add coach">Add Coach</option>
+                                    <option value="add route class">Add Route Class</option>
+                                    <option value="add isl">Add ISL</option>
+                                    <option value="tt change">TT-Change</option>
+                                    <option value="quota distribution">Quota Distribution</option>
+                                    <option value="new train">New Train</option>
+                                    <option value="specials">Specials</option>
+                                    <option value="frequent change">Frequent Change</option>
+                                    <option value="src-dstn extn">Src/Destn Extn</option>
+                                    <option value="token lost">Token Lost (Non-Train Activity)</option>
+                                    <option value="tdm">TDM (Non-Train Activity)</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                        </li>
+                        <li class="form-list__row">
+                            <div>
+                                <label for="trainaction">Train/Action</label>
+                                <input type="text" id="trainaction" name="trainaction" [(ngModel)]="trainaction"
+                                    required>
+                            </div>
+                        </li>
+                        <li class="form-list__row">
+                            <div>
+                                <label for="efromdate">Effective From Date</label>
+                                <input type="date" id="efromdate" name="efromdate" [(ngModel)]="efromdate" required>
+                            </div>
+                        </li>
+                        <li class="form-list__row">
+                            <div>
+                                <label for="etodate">Effective To Date</label>
+                                <input type="date" id="etodate" name="etodate" [(ngModel)]="etodate" required>
+                            </div>
+                        </li>
+                        <li class="form-list__row">
+                            <div>
+                                <label for="remarks">Remarks</label>
+                                <textarea rows="3" cols="75" id="remarks" name="remarks" [(ngModel)]="remarks"
+                                    required></textarea>
+                            </div>
+                        </li>
+                        <li class="form-list__row">
+                            <div>
+                                <label for="alertdate">Alert Date</label>
+                                <input type="date" id="alertdate" name="alertdate" [(ngModel)]="alertdate" required>
+                            </div>
+                        </li>
+                        <li class="form-list__row">
+                            <span style="color: red;">{{checkresult}}</span>
+                        </li>
+                        <li class="form-list__row">
+                            <button class="buttonCNF" style="align-content: center;" (click)="completion()"
+                                type="button">Validate</button>
+                        </li>
+                    </ul>
+                </div>
+            </form>
+            <div class="closeModal">
+                <button class="buttonClose" onclick="document.getElementById('completed').style.display='none'"
+                    type="button">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="w3-container">
+    <div id="checkedadmin" class="w3-modal">
+        <div class="w3-modal-content w3-card-4 w3-animate-zoom" style="max-width:600px">
+            <div class="close-center"><br>
+                <span onclick="document.getElementById('checkedadmin').style.display='none'"
+                    title="Close Modal"><strong>&times;</strong></span>
+            </div>
+            <div class="headerModal">
+                Approval Modal
+            </div>
+            <form class="w3-container">
+                <div class="w3-section">
+                    <ul class="form-list">
+                        <li class="form-list__row">
+                            <div>
+                                <!-- <h3>As per Notification Data feed in the System and User Done the Acitivity Matched
+                                    once read the PDf and give the Approval</h3> -->
+                                <h3>Please read the notification thoroughly and confirm your activity(s)</h3>
+                            </div>
+
+                        </li>
+                        <li class="form-list__row">
+                            <div class="form-group">
+                                <!-- <span *ngIf?="activitypicked.pdfstatus===true"><a (click)="openPDF(activitypicked._id);"><i class="fa-regular fa-file-pdf"></i></a></span> -->
+                            </div>
+                            <div class="form-group">
+                                <label for="workdoneby">UserName :{{workdoneby}}</label>
+                            </div>
+                        </li>
+                        <li class="form-list__row">
+                            <div class="form-group">
+                                <label for="remarks">User Remarks :{{userremarks}}</label>
+
+                            </div>
+                        </li>
+                        <li class="form-list__row">
+                            <div class="form-group">
+                                <label for="alertdate">Alert Date :{{useralertdate}}</label>
+                            </div>
+                        </li>
+                        <li class="form-list__row">
+                            <div class="form-group">
+                                <label for="alertdate">Completed Date :{{completedate |
+                                    date:'dd/mm/yyyy'}}</label>
+                            </div>
+                        </li>
+                        <li class="form-list__row">
+                            <div class="form-group">
+                                <label for="alertdate">Completed Time :{{completetime}}</label>
+                            </div>
+                        </li>
+
+                        <li class="form-list__row">
+                            <div class="form-group">
+                                <p *ngIf="flagpdf===true"><span><a (click)="openPDFread()"><i
+                                                class="fa-regular fa-file-pdf"></i></a></span></p>
+                            </div>
+                        </li>
+                        <li class="form-list__row">
+                            <div class="form-group">
+                                <label for="remarksadmin">Admin Remarks</label>
+                                <textarea rows="3" cols="80" id="remarksadmin" name="remarksadmin"
+                                    [(ngModel)]="remarksadmin" required></textarea>
+                            </div>
+                        </li>
+                        <li class="form-list__row">
+                            <button class="buttonClose" (click)="approval()" type="button">Yes, Approve!</button>
+                        </li>
+                    </ul>
+                </div>
+            </form>
+
+            <div class="closeModal">
+                <button class="buttonClose" onclick="document.getElementById('checkedadmin').style.display='none'"
+                    type="button">Cancel</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+<div class="w3-container">
+    <div id="alertrevoke" class="w3-modal">
+        <div class="w3-modal-content w3-card-4 w3-animate-zoom" style="max-width:600px">
+            <div class="close-center"><br>
+                <span onclick="document.getElementById('alertrevoke').style.display='none'"
+                    title="Close Modal"><strong>&times;</strong></span>
+            </div>
+            <div class="headerModal">
+                Revoke Modal
+            </div>
+            <form class="w3-container">
+                <div class="w3-section">
+                    <ul class="form-list">
+                        <li class="form-list__row">
+                            <div>
+                                <h3>Alert Revoke with Suitable Remarks</h3>
+                            </div>
+                        </li>
+                        <li class="form-list__row">
+                            <div class="form-group">
+                                <label for="workdoneby">UserName :{{workdonebyshow}}</label>
+                            </div>
+                        </li>
+                        <li class="form-list__row">
+                            <div class="form-group">
+                                <label for="remarks">User Remarks :{{userremarksshow}}</label>
+
+                            </div>
+                        </li>
+                        <li class="form-list__row">
+                            <div class="form-group">
+                                <label for="alertdate">Alert Date :{{useralertdateshow |
+                                    date:'dd/mm/yyyy'}}</label>
+                            </div>
+                        </li>
+                        <li class="form-list__row">
+                            <div class="form-group">
+                                <label for="alertdate">Admin Remark :{{adminremarksshow}}</label>
+                            </div>
+                        </li>
+                        <li class="form-list__row">
+                            <div class="form-group">
+                                <p *ngIf="flagpdf===true"><span><a (click)="openPDFread()"><i
+                                                class="fa-regular fa-file-pdf"></i></a></span></p>
+                            </div>
+                        </li>
+                        <li class="form-list__row">
+                            <div class="form-group">
+                                <label for="revokeremark">Alert Revoke Remarks</label>
+                                <textarea rows="3" cols="80" id="revokeremark" name="revokeremark"
+                                    [(ngModel)]="revokeremark" required></textarea>
+                            </div>
+                        </li>
+                        <li class="form-list__row">
+                            <button class="buttonCNF" (click)="revokeupdate()" type="button">Revoke</button>
+                        </li>
+                    </ul>
+                </div>
+            </form>
+            <div class="closeModal">
+                <button class="buttonClose" onclick="document.getElementById('alertrevoke').style.display='none'"
+                    type="button">Cancel</button>
+            </div>
+
+        </div>
+    </div>
+</div>

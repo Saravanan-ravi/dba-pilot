@@ -1,0 +1,14 @@
+use railways;
+
+db.createCollection('users');
+
+db.users.insert({username:"u1",password:"p123",mailid:"p1@p1.com",phone:99887788,dob:"20-11-2000",role:"R1",isActive:true })
+
+Inspection App E-mail ID:
+Primary: 
+ID: cims.sr.gov@gmail.com
+Pwd: cims@itcell2020
+
+Secondary:
+ID: cims1.sr.gov@gmail.com
+Pwd:cims@itcell2020

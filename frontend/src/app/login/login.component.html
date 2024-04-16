@@ -1,0 +1,258 @@
+<div class="modal">
+    <div class="modal__container">
+        <div class="modal__featured">
+            <div class="modal__circle"></div>
+            <img src="/assets/loginimg/login2.jpg" class="modal__product" />
+        </div>
+        <div class="modal__content">
+            <div class="logocarrier">
+                <div>
+                    <img class="bg1" src="/assets/images/irlogo.png" alt="ir-logo">
+                </div>
+            </div>
+            <h2 style="text-align: center;">Welcome | DB Login</h2>
+            <form id="login-form" #loginform>
+                <ul class="form-list">
+                    <li class="form-list__row">
+                        <label>Username</label>
+                        <input type="text" name="username" id="username" required [(ngModel)]="username" />
+                    </li>
+                    <li class="form-list__row">
+                        <label>Password</label>
+                        <div class='pwdEyeFrame'>
+                            <input type="password" name="cc_number" required [type]="passwords"
+                                [(ngModel)]="password" />
+                            <span class="pwdEye" (click)="togglePassword();">
+                                <i class="fa-regular fa-eye" *ngIf="!showPassword"></i>
+                                <i class="fa-regular fa-eye-slash" *ngIf="showPassword"></i>
+                            </span>
+                        </div>
+                    </li>
+                    <li class="form-list__row">
+                        <div *ngIf="error" style="color: red;">
+                            {{errorMsg}}
+                        </div>
+                    </li>
+                    <li>
+                        <button type="button" class="button" (click)="loginMe()">Login</button>
+                    </li>
+                    <li style="font-size: 12px;">
+                        <span class="register"><a
+                                onclick="document.getElementById('createAccount').style.display='block'"> <i
+                                    class="fa-solid fa-user-plus">&nbsp;</i>Create An
+                                Account</a></span>
+                        <span class="register"><a
+                                onclick="document.getElementById('forgotPassword').style.display='block'"> <i
+                                    class="fa-solid fa-link-slash">&nbsp;</i>Forgot
+                                Password?</a></span>
+                    </li>
+                </ul>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="w3-container">
+    <div id="forgotPassword" #forgotPassword class="w3-modal">
+        <div class="w3-modal-content w3-card-4 w3-animate-zoom" style="max-width:600px">
+            <div class="close-center"><br>
+                <span onclick="document.getElementById('forgotPassword').style.display='none'"
+                    title="Close Modal"><strong>&times;</strong></span>
+            </div>
+            <div class="headerModal">
+                Password Recovery
+            </div>
+
+            <form class="w3-container" id="pwdrecovery-form" #pwdrecoveryform>
+                <div class="w3-section">
+                    <ul class="form-list">
+                        <li class="form-list__row">
+                            <label>Username</label>
+                            <input type="text" name="recoveryusername" id="recoveryusername" required
+                                [(ngModel)]="recoveryusername" />
+                        </li>
+                        <li class="form-list__row">
+                            <label>Choose Your Secret Question</label>
+                            <div class='pwdEyeFrame'>
+                                <select name="recoverysecretquestion" id="recoverysecretquestion"
+                                    [(ngModel)]="recoverysecretquestion">
+                                    <option disabled selected>-- Select Question--</option>
+                                    <option value="kids name">Kids Name?</option>
+                                    <option value="spouse name">Spouse Name?</option>
+                                </select>
+                            </div>
+                        </li>
+                        <li class="form-list__row">
+                            <label>Enter The Answer</label>
+                            <input type="text" name="recoverysecretanswer" id="recoverysecretanswer"
+                                [(ngModel)]="recoverysecretanswer" required />
+                        </li>
+                        <li class="form-list__row">
+                            <div>
+                                <span *ngIf="errorRecvy" style="color: red;">{{errorMsgRecvy}}</span>
+                                <span style="color: red;">{{recoveryValidationResponse}}</span>
+                                <span>{{resCheck}}</span>
+                            </div>
+                        </li>
+                        <!-- (click)="recoverPassword();" onclick="document.getElementById('registerNewPassword').style.display='block';" -->
+                        <!-- for closing the modal onclick="document.getElementById('forgotPassword').style.display='none';" -->
+                        <li>
+                            <button type="button" class="button" (click)="recoveryPwdValidate()">Recover</button>
+                        </li>
+                    </ul>
+                </div>
+            </form>
+            <div class="closeModal">
+                <button class="buttonClose" onclick="document.getElementById('forgotPassword').style.display='none'"
+                    type="button">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="w3-container">
+    <div id="registerNewPassword" #registerNewPassword class="w3-modal">
+        <div class="w3-modal-content w3-card-4 w3-animate-zoom" style="max-width:600px">
+            <div class="close-center"><br>
+                <span onclick="document.getElementById('registerNewPassword').style.display='none'"
+                    title="Close Modal"><strong>&times;</strong></span>
+            </div>
+            <div class="headerModal">
+                Update Password
+            </div>
+            <form class="w3-container" id="updatepwd-form" #updatepwdform>
+                <div class="w3-section">
+                    <ul class="form-list">
+                        <li class="form-list__row">
+                            <label>Username</label>
+                            <input type="text" disabled [(ngModel)]="recoveryusername" name="recoveryusername">
+                        </li>
+                        <li class="form-list__row">
+                            <label>Create New Password</label>
+                            <div class='pwdEyeFrame'>
+                                <input type="password" id="updatepassword" name="updatepassword" required
+                                    [type]="passwords" [(ngModel)]="updatepassword" />
+                                <span class="pwdEye" (click)="togglePassword();">
+                                    <i class="fa-regular fa-eye" *ngIf="!showPassword"></i>
+                                    <i class="fa-regular fa-eye-slash" *ngIf="showPassword"></i>
+                                </span>
+                            </div>
+                        </li>
+                        <li class="form-list__row">
+                            <label>Confirm New Password</label>
+                            <div class='pwdEyeFrame'>
+                                <input type="password" id="confirmpassword" name="confirmpassword" required
+                                    [type]="passwords" [(ngModel)]="confirmpassword" (paste)="DisablePaste($event)" />
+                                <span class="pwdEye" (click)="togglePassword();">
+                                    <i class="fa-regular fa-eye" *ngIf="!showPassword"></i>
+                                    <i class="fa-regular fa-eye-slash" *ngIf="showPassword"></i>
+                                </span>
+                            </div>
+                        </li>
+                        <li class="form-list__row">
+                            <div *ngIf="errorConfirm" style="color: red;">
+                                {{errorMsgConfirm}}
+                            </div>
+                            <div *ngIf="passwordMatchError" style="color: red;">
+                                <span>{{passwordMatchError}}</span>
+                            </div>
+                        </li>
+                        <li>
+                            <button type="button" class="button" (click)="updatePwdValidate()">Submit</button>
+                        </li>
+                    </ul>
+                </div>
+            </form>
+
+            <div class="closeModal">
+                <button class="buttonClose"
+                    onclick="document.getElementById('registerNewPassword').style.display='none'"
+                    type="button">Cancel</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="w3-container">
+    <div id="createAccount" #createAccount class="w3-modal">
+        <div class="w3-modal-content w3-card-4 w3-animate-zoom" style="max-width:600px">
+            <div class="close-center"><br>
+                <span onclick="document.getElementById('createAccount').style.display='none'"
+                    title="Close Modal"><strong>&times;</strong></span>
+            </div>
+            <div class="headerModal">
+                SignUp
+            </div>
+            <form class="w3-container" id="signup-form" #signupform>
+                <div class="w3-section">
+                    <ul class="form-list">
+                        <li class="form-list__row">
+                            <label>Name</label>
+                            <input type="text" name="registerdudename" id="registerdudename"
+                                [(ngModel)]="registerdudename" required />
+                        </li>
+                        <li class="form-list__row">
+                            <label>Username</label>
+                            <input type="text" name="registerusername" id="registerusername" required
+                                [(ngModel)]="registerusername" />
+                        </li>
+                        <li class="form-list__row">
+                            <label>Password</label>
+                            <div class='pwdEyeFrame'>
+                                <input type="password" name="registerpassword" id="registerpassword" required
+                                    [type]="passwords" [(ngModel)]="registerpassword" />
+                                <span class="pwdEye" (click)="togglePassword();">
+                                    <i class="fa-regular fa-eye" *ngIf="!showPassword"></i>
+                                    <i class="fa-regular fa-eye-slash" *ngIf="showPassword"></i>
+                                </span>
+                            </div>
+                        </li>
+                        <li class="form-list__row">
+                            <label>Select Your Role</label>
+                            <div class='pwdEyeFrame'>
+                                <select name="registerrole" id="roregisterrolele" [(ngModel)]="registerrole" required>
+                                    <option disabled selected>-- Select Role--</option>
+                                    <option value="Administrator">Administrator</option>
+                                    <option value="Supervisor">Supervisor</option>
+                                    <option value="dbaUser">dbaUser</option>
+                                </select>
+                            </div>
+                        </li>
+                        <li class="form-list__row">
+                            <label>Choose Your Secret Question</label>
+                            <div class='pwdEyeFrame'>
+                                <select name="registersecretquestion" id="registersecretquestion"
+                                    [(ngModel)]="registersecretquestion" required>
+                                    <option disabled selected>-- Select Question--</option>
+                                    <option value="kids name">Kids Name?</option>
+                                    <option value="spouse name">Spouse Name?</option>
+                                    <option value="favbook">What is your favorite Book?</option>
+                                </select>
+                            </div>
+                        </li>
+                        <li class="form-list__row">
+                            <label>Enter The Answer</label>
+                            <input type="text" name="registersecretanswer" id="registersecretanswer"
+                                [(ngModel)]="registersecretanswer" required />
+                        </li>
+                        <li class="form-list__row">
+                            <div *ngIf="errorSign" style="color: red;">
+                                {{errorMsgSign}}
+                            </div>
+                        </li>
+                        <li>
+                            <button type="button" class="button" (click)="signUpValidate()">SignUp</button>
+                        </li>
+                    </ul>
+                </div>
+            </form>
+
+            <div class="closeModal">
+                <button class="buttonClose" onclick="document.getElementById('createAccount').style.display='none'"
+                    type="button">Cancel</button>
+            </div>
+
+        </div>
+    </div>
+</div>

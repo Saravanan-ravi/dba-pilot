@@ -1,0 +1,120 @@
+<div class="formMaster">
+    <div class="form-group" style="margin-left: 10%;">
+        <div class="container">
+                <div>
+                    <select [(ngModel)]="ddActivity" id="ddActivity" name="ddActivity" class="dropdown"
+                        (change)="activity($event)">
+                        <option value="-- Select Station --"> -- Select Activity Type -- </option>
+                        <option *ngFor="let activity of activityarray" style="font-weight: 600;">{{activity}} </option>
+                    </select>
+                    <select [(ngModel)]="ddTrainaction" id="ddTrainaction" name="ddTrainaction" class="dropdown"
+                        (change)="trainaction($event)">
+                        <option value="-- Select Station --"> -- Select Action / Train -- </option>
+                        <option *ngFor="let trainaction1 of trainactionarray" style="font-weight: 600;">{{trainaction1}}
+                        </option>
+                    </select>
+                    <select [(ngModel)]="ddeffevtivefrom" id="ddeffevtivefrom" name="ddeffevtivefrom" class="dropdown"
+                        (change)="effective($event)">
+                        <option value="-- Select Effective From --"> -- Select Effective From -- </option>
+                        <option *ngFor="let effective of effectdatearray" style="font-weight: 600;">{{effective |
+                            date:'dd/MM/yyyy'}}
+                        </option>
+                    </select>
+                    <select [(ngModel)]="ddjobpicked" id="ddjobpicked" name="ddjobpicked" class="dropdown"
+                        (change)="jobpickedfun($event)">
+                        <option value="-- Select Effective From --"> -- Select Effective From -- </option>
+                        <option *ngFor="let jobpicked of jobpickedbyarray" style="font-weight: 600;">{{jobpicked}}
+                        </option>
+                    </select>
+                    <!-- <button class="buttonClose" onclick="reportcustom()" type="button">Cancel</button> -->
+                </div>
+        </div>
+    </div>
+</div>
+
+<div class="formMaster">
+    <div class="form-group" style="margin-left: 10%;">
+        <div class="container">
+            <table>
+                <thead>
+                    <tr>
+                        <th colspan="11" class="centeredHeading">
+                            <p class="headerSpan"><span>TODAY'S ACTIVITY REPORT |</span><span
+                                    style="color: #b6ab45;">&nbsp;{{todayDate |
+                                    date: 'dd-MMMM-yyyy'}}</span></p>
+                            <div class="searchBox">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                                <label class="searchLabel" for="searchText">&nbsp;Find <u>W</u>hat:</label>
+                                <input class="searchInput"
+                                    style="background-color: rgba(0, 0, 0, 0); color: antiquewhite; width: auto;"
+                                    [(ngModel)]="searchText" name="searchText" placeholder="search by key word(s)">
+                            </div>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th>Notification Number</th>
+                        <th>Notification Date</th>
+                        <th>Received Date</th>
+                        <th>Received Time</th>
+                        <th>Reception Mode</th>
+                        <th>Activity Type</th>
+                        <th>Action/Train</th>
+                        <th>EFD</th>
+                        <th>ETD</th>
+                        <th>PDF</th>
+                        <th>Notification Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <ng-container *ngIf="(customarray | filter: searchText)?.length > 0; else noDataMessage">
+                        <tr *ngFor="let list of customarray | filter: searchText; let i = index">
+
+                            <td>
+                                {{ list.notification_number }}
+                            </td>
+                            <td>
+                                {{ list.notification_date | date: 'dd-MMyyyy' }}
+                            </td>
+                            <td>
+                                {{ list.notification_received_date | date: 'dd-MM-yyyy' }}
+                            </td>
+                            <td>
+                                {{ list.notificationupdatedtime }} <span>HRS</span>
+                            </td>
+                            <td>
+                                {{ list.reception_mode }}
+                            </td>
+                            <td>
+                                {{ list.activity_type }}
+                            </td>
+                            <td>
+                                {{ list.trainaction }}
+                            </td>
+                            <td>
+                                {{ list.effectivefromdate | date: 'dd/MM/yyyy' }}
+                            </td>
+                            <td>
+                                {{ list.effectivetodate | date: 'dd/MM/yyyy' }}
+                            </td>
+                            <td class="pdfIcon">
+                                <div class="form-group">
+                                    <!-- <p><span><a (click)="openPDF(list._id)">
+                                                <i class="fa-regular fa-file-pdf"></i></a></span></p> -->
+                                </div>
+                            </td>
+                            <td>
+                                {{ list.notify_status }}
+                            </td>
+                        </tr>
+                    </ng-container>
+                </tbody>
+                <ng-template #noDataMessage>
+                    <tr>
+                        <td colspan="11" style="text-align: center; color: red;"><span><strong>
+                                    No data available</strong></span></td>
+                    </tr>
+                </ng-template>
+            </table>
+        </div>
+    </div>
+</div>
