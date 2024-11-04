@@ -22,7 +22,7 @@ import { RequestTypeModalComponent } from './request-type-modal/request-type-mod
 import { MatButtonModule } from '@angular/material/button';
 
 
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { ExcelService } from './excel.service';
 import { provideUserIdleConfig } from 'angular-user-idle'; //new
 import { MatTabsModule } from '@angular/material/tabs';
@@ -51,58 +51,52 @@ const idleConfig = {
   ping: 300 // in seconds
 };
 
-@NgModule({
-  declarations: [
-    AppComponent,
-    DateFormatPipe,
-    LoginComponent,
-    DashboardComponent,
-    HorComponent,
-    EntryFormComponent,
-    PlaygroundComponent,
-    RequestTypeModalComponent,
-    OcrComponent,
-    ReportComponent,
-    MisReportComponent
-  ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    CommonModule,
-    FormsModule,
-    HttpClientModule,
-    MatRadioModule,
-    MatTabsModule,
-    BrowserAnimationsModule,
-    MatCommonModule,
-    MatDialogModule,
-    MatButtonModule,
-    MatRadioButton,
-    CommonModule,
-    ReactiveFormsModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
-    MatInputModule,
-    MatSelectModule,
-    MatSnackBarModule,
-    MatProgressSpinnerModule,
-    MatChipsModule,
-    MatFormFieldModule,
-    HttpClientModule,
-    MatAutocompleteModule,
-    NgIf,
-    ReactiveFormsModule
-  ],
-  providers: [
-    provideUserIdleConfig({ idle: 2200, timeout: 1500, ping: 820 }), //new //idle: 600, timeout: 300, ping: 120 
-    ExcelService,
-    DatePipe,
-    MatDatepickerModule,
-    provideAnimationsAsync(),
-  ],
-  bootstrap: [
-    AppComponent,
-  ],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
-})
+@NgModule({ declarations: [
+        AppComponent,
+        DateFormatPipe,
+        LoginComponent,
+        DashboardComponent,
+        HorComponent,
+        EntryFormComponent,
+        PlaygroundComponent,
+        RequestTypeModalComponent,
+        OcrComponent,
+        ReportComponent,
+        MisReportComponent
+    ],
+    bootstrap: [
+        AppComponent,
+    ],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA], imports: [BrowserModule,
+        AppRoutingModule,
+        CommonModule,
+        FormsModule,
+        HttpClientModule,
+        MatRadioModule,
+        MatTabsModule,
+        BrowserAnimationsModule,
+        MatCommonModule,
+        MatDialogModule,
+        MatButtonModule,
+        MatRadioButton,
+        CommonModule,
+        ReactiveFormsModule,
+        MatDatepickerModule,
+        MatNativeDateModule,
+        MatInputModule,
+        MatSelectModule,
+        MatSnackBarModule,
+        MatProgressSpinnerModule,
+        MatChipsModule,
+        MatFormFieldModule,
+        MatAutocompleteModule,
+        NgIf,
+        ReactiveFormsModule], providers: [
+        provideUserIdleConfig({ idle: 2200, timeout: 1500, ping: 820 }), //new //idle: 600, timeout: 300, ping: 120 
+        ExcelService,
+        DatePipe,
+        MatDatepickerModule,
+        provideAnimationsAsync(),
+        provideHttpClient(withInterceptorsFromDi()),
+    ] })
 export class AppModule { }
