@@ -1,11 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient, HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { SessionService } from '../session.service';
 import { Router } from '@angular/router';
-import { IpServiceService } from '../ip-service.service';
 import { DatePipe } from '@angular/common';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { throwError } from 'rxjs';
+import Swal from 'sweetalert2'
 
 
 @Component({
@@ -18,62 +16,39 @@ export class LoginComponent implements OnInit {
   password = "";
   error = false;
   errorMsg = "";
-  errorRecvy = false;
-  errorMsgRecvy = "";
-  errorSign = false;
-  errorMsgSign = "";
-  errorConfirm = false;
-  errorMsgConfirm = "";
-
   CRyear: number = new Date().getFullYear();
   Loggedusername;
   EntireUserRole;
-  ipAddress;
-  ipv4;
   SuperOption: string = '';
   hrs;
-  showPassword = true;
-  passwords;
+  loading: boolean = true;
+  visible: boolean = true;
+  changetype: boolean = true;
 
-  resCheck;
-
-  registerdudename;
-  registerusername;
-  registerpassword;
-  registerrole;
-  registersecretquestion;
-  registersecretanswer;
+  userId: string; // Store the user ID after verification
+  pfNumber: any;
+  dob: any;
 
 
-  updateusername;
-  updatepassword;
-  confirmpassword;
-  passwordMatchError = "";
+  newPassword: any;
+  confirmPassword: any;
 
-  recoveryusername;
-  recoverysecretquestion;
-  recoverysecretanswer;
-
-  recoveryValidationResponse;
-
-  constructor(private datepipe: DatePipe, private httpClient: HttpClient, private session: SessionService, private router: Router, private ipadd: IpServiceService, public dialog: MatDialog) { }
+  constructor(private datepipe: DatePipe, private httpClient: HttpClient, private session: SessionService, private router: Router) { }
 
   ngOnInit() {
     var isLoggedIn = this.session.getUser();
     if (isLoggedIn != null) {
-      this.router.navigate(["/dashboard"]);
+      this.router.navigate(["/entry-form"]);
     }
-    this.passwords = 'password';
   }
 
-  togglePassword() {
-    if (this.passwords === 'password') {
-      this.showPassword = false;
-      this.passwords = ''
-    } else {
-      this.passwords = 'password';
-      this.showPassword = true;
-    }
+  viewpass() {
+    this.visible = !this.visible;
+    this.changetype = !this.changetype;
+  }
+
+  onLoad() {
+    this.loading = false;
   }
 
   loginMe() {
@@ -81,17 +56,16 @@ export class LoginComponent implements OnInit {
     this.errorMsg = "";
     if (!this.username) {
       this.error = true;
-      this.errorMsg = "Incorrect Username or Password";
+      this.errorMsg = "Enter Username";
       return;
     }
     if (!this.password) {
       this.error = true;
-      this.errorMsg = "Check your Password";
+      this.errorMsg = "Password can't be empty";
       return;
     }
     this.httpClient.post("/auth/login", { username: this.username, password: this.password }).subscribe(data => {
-      // console.log(data);
-      // this.UserLog();
+      console.log(data);
       this.session.setUser(data);
       window.location.href = "/dashboard";
     }, error => {
@@ -101,201 +75,69 @@ export class LoginComponent implements OnInit {
     })
   }
 
-  dbausers = [
-    "SuperAdmin",
-    "Admin",
-    "DBAU-1",
-    "DBAU-2",
-    "DBAU-3",
-    "DBAU-4",
-    "DBAU-5",
-    "DBAU-6"
-  ];
-
-  // openDialog(){
-  //   const dialogRef = this.dialog.open();
-
-  //   dialogRef.afterClosed().subscribe(result => {
-  //     console.log(`Dialog result: ${result}`);
-  //   });
-  // }
-
-  getIP() {
-    this.ipadd.getIPAddress().subscribe((res: any) => {
-      this.ipAddress = res.ip;
-    });
+  openModal() {
+    document.getElementById('frpassword')!.style.display = 'block';
   }
 
-  fetcher() {
-    this.Loggedusername = this.username;
-    var myDate = new Date();
-    const iso = myDate.toISOString();
-    this.hrs = this.datepipe.transform(iso, 'dd-MMM-yyyy, h:mm:ss a');
+  closeModal() {
+    document.getElementById('frpassword')!.style.display = 'none';
   }
 
-  UserLog() {
-    this.fetcher();
-    this.httpClient.post("/loginlog/savelog", {
-      UsrName: this.Loggedusername,
-      UsrDate: this.hrs,
-      UsrIPv4: this.ipAddress,
-      UsrRemark: "Logged-In"
-    }).subscribe(data => {
-      console.log("USERLOG: " + data)
-    }, error => {
-      console.log(error)
+  verifyUser() {
+    this.error = false;
+    this.errorMsg = '';
+
+    if (!this.pfNumber || !this.username || !this.dob) {
       this.error = true;
-      this.errorMsg = error.error.message;
-    })
-  }
+      this.errorMsg = 'Please fill all fields';
+      return;
+    }
 
-  signUpValidate() {
-    this.errorSign = false;
-    this.errorMsgSign = "";
-    if (!this.registerdudename) {
-      this.errorSign = true;
-      this.errorMsgSign = "Incomplete Field Error";
-      return;
-    }
-    if (!this.registerusername) {
-      this.errorSign = true;
-      this.errorMsgSign = "Incomplete Field Error";
-      return;
-    }
-    if (!this.registerpassword) {
-      this.errorSign = true;
-      this.errorMsgSign = "Incomplete Field Error";
-      return;
-    }
-    if (!this.registerrole) {
-      this.errorSign = true;
-      this.errorMsgSign = "Incomplete Field Error";
-      return;
-    }
-    if (!this.registersecretquestion) {
-      this.errorSign = true;
-      this.errorMsgSign = "Incomplete Field Error";
-      return;
-    }
-    if (!this.registersecretanswer) {
-      this.errorSign = true;
-      this.errorMsgSign = "Incomplete Field Error";
-      return;
-    }
-    this.signUp();
-  }
-
-  recoveryPwdValidate() {
-    this.errorRecvy = false;
-    this.errorMsgRecvy = "";
-    if (!this.recoveryusername) {
-      this.errorRecvy = true;
-      this.errorMsgRecvy = "Incomplete Field Error";
-      return;
-    }
-    if (!this.recoverysecretquestion) {
-      this.errorRecvy = true;
-      this.errorMsgRecvy = "Incomplete Field Error";
-      return;
-    }
-    if (!this.recoverysecretanswer) {
-      this.errorRecvy = true;
-      this.errorMsgRecvy = "Incomplete Field Error";
-      return;
-    }
-    this.recoverPassword();
-  }
-
-  DisablePaste(event: any) {
-    alert("You can't paste in this input");
-    event.preventDefault();
-  }
-
-  updatePwdValidate() {
-    this.errorConfirm = false;
-    this.errorMsgConfirm = "";
-    if (!this.updatepassword) {
-      this.errorConfirm = true;
-      this.errorMsgConfirm = "Incomplete Field Error";
-      return;
-    }
-    if (!this.confirmpassword) {
-      this.errorConfirm = true;
-      this.errorMsgConfirm = "Incomplete Field Error";
-      return;
-    }
-    this.updatePassword();
-  }
-
-  signUp() {
-    this.httpClient.post("/registeruser/registration", {
-      dude: this.registerdudename,
-      username: this.registerusername,
-      password: this.registerpassword,
-      role: this.registerrole,
-      token: null,
-      secretquestion: this.registersecretquestion,
-      secretanswer: this.registersecretanswer,
-      isActive: "false",
-
-    }).subscribe(data => {
-      console.log("USERregistration:", data)
-    }, error => {
-      console.log(error)
-      this.error = true;
-      this.errorMsg = error.error.message;
-    })
-    window.location.reload();
-  }
-
-  recoverPassword() {
-    try {
-      this.httpClient.post("/auth/recover", {
-        username: this.recoveryusername,
-        secretquestion: this.recoverysecretquestion,
-        secretanswer: this.recoverysecretanswer,
-      }).subscribe(data => {
-        console.log("RecoverPassword:", data)
-        this.updateusername = this.recoveryusername;
-        document.getElementById('forgotPassword').style.display='none';
-        document.getElementById('registerNewPassword').style.display = 'block';
-      }, (error) => {
-        if (error.status === 0) {
-          console.error('An error occurred:', error.error);
-          this.recoveryValidationResponse = "Wrong username or Secret question or Answer.";
-        } else {
-          console.error(
-            `Backend returned code ${error.status}, body was: `, error.error);
-          this.recoveryValidationResponse = "Wrong username or Secret question or Answer.";
-        }
-        // console.log("recvyError", error)
-        this.error = true;
-        this.errorMsg = error.error.message;
-        return throwError(() => new Error('Something bad happened; please try again later.'));
-      });
-    } catch {
-      console.log("error in uploading")
-    }
-  }
-
-  updatePassword() {
-    this.updateusername;
-    if (this.updatepassword === this.confirmpassword) {
-      this.httpClient.post("/auth/updatepassword", {
-        username: this.updateusername,
-        password: this.confirmpassword,
-      }).subscribe(data => {
-        console.log("Password Updated:", data)
+    this.httpClient.post<{ userId: string }>('/auth/forgot-password', { pfNumber: this.pfNumber, username: this.username, dob: this.dob })
+      .subscribe(response => {
+        this.userId = response.userId;
+        // alert('User verified! Please enter your new password.');
+        Swal.fire("User verified! Please enter your new password");
       }, error => {
-        console.log(error)
+        console.error(error);
         this.error = true;
-        this.errorMsg = error.error.message;
-      })
-      window.location.reload();
-      console.log("Password Correct");
+        this.errorMsg = error.error.message || 'An error occurred.';
+      });
+
+  }
+
+  resetPassword() {
+    this.error = false;
+    this.errorMsg = '';
+
+    if (this.newPassword !== this.confirmPassword) {
+      this.error = true;
+      this.errorMsg = 'Passwords do not match.';
+      return;
+    }
+
+    if (!this.newPassword || !this.confirmPassword) {
+      this.error = true;
+      this.errorMsg = 'Please fill all fields';
     } else {
-      console.log("Passwords do not match");
-      this.passwordMatchError = "Passwords do not match.";
+      this.httpClient.post('/auth/reset-password', { userId: this.userId, newPassword: this.newPassword })
+        .subscribe(
+          (response: any) => {
+            // alert(response.message); // Show the success message to the user
+            this.router.navigate(['/login']);
+            if (response.message) {
+              Swal.fire("Password Changed Successfully!");
+            }
+            setTimeout(function () {
+              window.location.reload();
+            }, 1000);
+          },
+          error => {
+            console.error(error);
+            this.error = true;
+            this.errorMsg = error.error.message || 'Failed to reset password.';
+          }
+        );
     }
   }
 }

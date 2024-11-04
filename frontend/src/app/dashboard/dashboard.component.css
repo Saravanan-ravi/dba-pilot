@@ -1,0 +1,69 @@
+.form-list {
+    background-color: #fff4f2b0;
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    padding: 30px;
+    width: 100%;
+    border-radius: 10px;
+    box-shadow: 3px 3px 20px rgba(0, 0, 0, 0.26);
+}
+
+.chart-wrapper {
+    flex: 1 1 calc(50% - 40px);
+    /* Two items per row, minus gap */
+    max-width: 500px;
+    /* Adjust based on your design requirements */
+    margin: 10px;
+    text-align: center;
+}
+
+.chart-container {
+    width: 100%;
+    height: 300px;
+}
+
+
+.form-list {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+h2 {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+    color: #e94c81;
+}
+
+table {
+    margin: 0 auto;
+    /* Align table to center */
+    width: 100%;
+    padding: 10px;
+    /* Add 20px padding to the table */
+    background-color: #18283b;
+    border: 1px solid rgba(218, 165, 32, 0.692);
+    border-collapse: collapse;
+}
+
+th {
+    color: #fde89b;
+    font-size: 14px;
+    text-align: center;
+    padding: 8px;
+    background-color: #D62929;
+    border: 1px solid rgba(218, 165, 32, 0.692);
+}
+
+tr,
+td {
+    font-size: 12px;
+    text-align: center;
+    padding: 8px;
+    text-shadow: 3px 3px 20px rgb(0, 0, 0);
+    color: white;
+    border-radius: 3px;
+    border: 1px solid rgba(218, 165, 32, 0.692);
+}

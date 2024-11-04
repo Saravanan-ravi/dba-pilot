@@ -1,0 +1,234 @@
+<div class="mainForm">
+    <mat-tab-group>
+        <mat-tab label="Date-wise">
+            <br>
+            <div style="padding: 10px;">
+                <div class="innerHeader">
+                </div>
+                <div>
+                    <div class="report-container">
+                        <form [formGroup]="datewiseReportForm" (ngSubmit)="getReport()" class="date-report-form">
+                            <div class="form-group">
+                                <label for="startDate">Start Date:</label>
+                                <input type="date" id="startDate" formControlName="startDate" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label for="endDate">End Date:</label>
+                                <input type="date" id="endDate" formControlName="endDate" class="form-input">
+                            </div>
+                            <button type="submit" class="report-button" [disabled]="datewiseReportForm.invalid">Get
+                                Report</button>
+                        </form>
+                    </div><br>
+                    <div *ngIf="rptDatewise && rptDatewise.length > 0">
+                        <p style="color: red; float: left;" (click)="refresh()"><i class="fa-solid fa-arrow-rotate-right"></i>&nbsp;Refresh</p>
+                        <p style="font-size: 18px; float: right;"><span style="color: rgb(3, 133, 3);"
+                                (click)="datewiseToExcel();"><i class="fa-solid fa-file-excel"></i></span>&nbsp;<span
+                                style="color: rgb(185, 9, 9)" (click)="datewiseToPDF();"><i
+                                    class="fa-solid fa-file-pdf"></i></span></p>
+                    </div>
+                    <table *ngIf="rptDatewise && rptDatewise.length > 0">                        
+                        <tr>
+                            <th>Sl. No:</th>
+                            <th>EQ Given Date</th>
+                            <th>Train Number</th>
+                            <th>Source</th>
+                            <th>Destination</th>
+                            <th>Boarding</th>
+                            <th>PNR</th>
+                            <th>Designation</th>
+                            <th>Officer Name</th>
+                            <th>Mode Of Receipt</th>
+                            <th>Status</th>
+
+                        </tr>
+                        <tr *ngFor="let ls of rptDatewise; let i = index">
+                            <td>{{i+1}}</td>
+                            <td>{{ls.createdAt | date: 'dd-MM-yyyy hh:mm a'}}</td>
+                            <td>{{ls.train_number}}</td>
+                            <td>{{ls.from_stn}}</td>
+                            <td>{{ls.destination}}</td>
+                            <td>{{ls.boarding_at}}</td>
+                            <td>{{ls.pnr_number}}</td>
+                            <td>{{ls.designation}}</td>
+                            <td>{{ls.offmobilenumber}}</td>
+                            <td>{{ls.rece_mode}}</td>
+                            <td
+                                [ngStyle]="{'color': ls.status === 'Returned' ? 'red' : ls.status === 'Forwarded' ? 'orange' : ls.status === 'Accepted' ? 'green' : 'white'}">
+                                <b>{{ ls.status }}</b></td>
+
+                        </tr>
+                    </table>
+                    <!-- Message if no report data -->
+                    <div class="error" *ngIf="rptDatewise && rptDatewise.length === 0">
+                        <p>No report data available for the selected date range.</p>
+                    </div>
+                </div>
+            </div>
+        </mat-tab>
+
+        <mat-tab label="Designation-wise">
+            <br>
+            <div style="padding: 10px;">
+                <div class="innerHeader">
+                </div>
+                <div>
+                    <div class="report-container">
+                        <form [formGroup]="desReportForm" class="date-report-form">
+                            <!-- Start Date -->
+                            <div class="form-group">
+                                <label for="startDate">Start Date:</label>
+                                <input type="date" id="startDate" formControlName="startDate" class="form-input">
+                            </div>
+                            <!-- End Date -->
+                            <div class="form-group">
+                                <label for="endDate">End Date:</label>
+                                <input type="date" id="endDate" formControlName="endDate" class="form-input">
+                            </div>
+
+                            <!-- Designation Dropdown -->
+                            <div class="form-group">
+                                <label for="designation">Designation:</label>
+                                <select id="designation" formControlName="designation" class="form-input">
+                                    <option value="">All</option> <!-- Optional empty option for 'All' -->
+                                    <option *ngFor="let designation of designations" [value]="designation">
+                                        {{ designation }}
+                                    </option>
+                                </select>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Report Table -->
+                    <div *ngIf="rptDesignationwise && rptDesignationwise.length > 0">
+                        <p style="color: red; float: left;" (click)="refresh()"><i class="fa-solid fa-arrow-rotate-right"></i>&nbsp;Refresh</p>
+                        <p style="font-size: 18px; float: right;"><span style="color: rgb(3, 133, 3);"
+                                (click)="designationwiseToExcel();"><i
+                                    class="fa-solid fa-file-excel"></i></span>&nbsp;<span style="color: rgb(185, 9, 9)"
+                                (click)="designationwiseToPDF();"><i class="fa-solid fa-file-pdf"></i></span></p>
+                    </div>
+                    <table *ngIf="rptDesignationwise && rptDesignationwise.length > 0">
+                        <thead>
+                            <tr>
+                                <th>Sl. No:</th>
+                                <th>EQ Given Date</th>
+                                <th>Train Number</th>
+                                <th>Source</th>
+                                <th>Destination</th>
+                                <th>Boarding</th>
+                                <th>PNR</th>
+                                <th>Conveyed By</th> <!-- Clarified as 'Officer Name' below -->
+                                <th>Officer Name</th> <!-- Mobile Number -->
+                                <th>Mode Of Receipt</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let ls of rptDesignationwise; let i = index">
+                                <td>{{i+1}}</td>
+                                <td>{{ls.createdAt | date: 'dd-MM-yyyy hh:mm a'}}</td>
+                                <td>{{ls.train_number}}</td>
+                                <td>{{ls.from_stn}}</td>
+                                <td>{{ls.destination}}</td>
+                                <td>{{ls.boarding_at}}</td>
+                                <td>{{ls.pnr_number}}</td>
+                                <td>{{ls.eq_conveyed_by}}</td>
+                                <td>{{ls.offmobilenumber}}</td>
+                                <td>{{ls.rece_mode}}</td>
+                                <td
+                                    [ngStyle]="{'color': ls.status === 'Returned' ? 'red' : ls.status === 'Forwarded' ? 'orange' : ls.status === 'Accepted' ? 'green' : 'white'}">
+                                    <b>{{ ls.status }}</b></td>
+
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- Message if no report data -->
+                    <div class="error" *ngIf="rptDesignationwise && rptDesignationwise.length === 0">
+                        <p>No report data available for the selected date range and designation.</p>
+                    </div>
+                </div>
+
+            </div>
+        </mat-tab>
+
+        <mat-tab label="UserID-wise">
+            <br>
+            <div style="padding: 10px;">
+                <div class="innerHeader">
+                </div>
+                <div class="report-container">
+                    <form [formGroup]="userReportForm" class="date-report-form">
+                        <!-- Start Date -->
+                        <div class="form-group">
+                            <label for="startDate">Start Date:</label>
+                            <input type="date" id="startDate" formControlName="startDate" class="form-input">
+                        </div>
+                        <!-- End Date -->
+                        <div class="form-group">
+                            <label for="endDate">End Date:</label>
+                            <input type="date" id="endDate" formControlName="endDate" class="form-input">
+                        </div>
+                        <!-- User Name Dropdown -->
+                        <div class="form-group">
+                            <label for="eq_taken_by">User Name:</label>
+                            <select id="eq_taken_by" formControlName="eq_taken_by" class="form-input">
+                                <option value="">All</option> <!-- Optional empty option for 'All' -->
+                                <option *ngFor="let user of takenBys" [value]="user">
+                                    {{ user }}
+                                </option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Report Data Table -->
+                <div *ngIf="rptUserwise && rptUserwise.length > 0">
+                    <p style="color: red; float: left;" (click)="refresh()"><i class="fa-solid fa-arrow-rotate-right"></i>&nbsp;Refresh</p>
+                    <p style="font-size: 18px; float: right;"><span style="color: rgb(3, 133, 3);"
+                            (click)="userwiseToExcel();"><i class="fa-solid fa-file-excel"></i></span>&nbsp;<span
+                            style="color: rgb(185, 9, 9)" (click)="userwiseToPDF();"><i
+                                class="fa-solid fa-file-pdf"></i></span></p>
+                </div>
+                <table *ngIf="rptUserwise && rptUserwise.length > 0">
+                    <thead>
+                        <tr>
+                            <th>Sl. No</th>
+                            <th>EQ Given Date</th>
+                            <th>Train Number</th>
+                            <th>Source</th>
+                            <th>Destination</th>
+                            <th>Boarding</th>
+                            <th>PNR</th>
+                            <th>Designation</th>
+                            <th>Officer Name</th>
+                            <th>Mode Of Receipt</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let report of rptUserwise; let i = index">
+                            <td>{{ i + 1 }}</td>
+                            <td>{{ report.createdAt | date: 'dd-MM-yyyy hh:mm a' }}</td>
+                            <td>{{ report.train_number }}</td>
+                            <td>{{ report.from_stn }}</td>
+                            <td>{{ report.destination }}</td>
+                            <td>{{ report.boarding_at }}</td>
+                            <td>{{ report.pnr_number }}</td>
+                            <td>{{ report.designation }}</td>
+                            <td>{{ report.eq_conveyed_by }}</td>
+                            <td>{{ report.rece_mode }}</td>
+                            <td
+                                [ngStyle]="{'color': report.status === 'Returned' ? 'red' : report.status === 'Forwarded' ? 'orange' : report.status === 'Accepted' ? 'green' : 'white'}">
+                                <b>{{ report.status }}</b></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <!-- Message if no report data -->
+                <div class="error" *ngIf="rptUserwise && rptUserwise.length === 0">
+                    <p>No report data available for the selected date range and User.</p>
+                </div>
+            </div>
+        </mat-tab>
+    </mat-tab-group>
+</div>

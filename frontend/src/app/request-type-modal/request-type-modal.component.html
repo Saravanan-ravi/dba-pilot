@@ -1,0 +1,13 @@
+<h2 mat-dialog-title>Select Request Type</h2>
+<mat-dialog-content>
+  <form>
+    <mat-radio-group [(ngModel)]="requestType" name="requestType" class="radio-group" (change)="onRequestTypeChange($event)">
+      <mat-radio-button value="single" class="radio-button">Single Request</mat-radio-button>
+      <mat-radio-button value="multiple" class="radio-button">Multiple Requests</mat-radio-button>
+    </mat-radio-group>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button class="action-button" (click)="onConfirm()">Confirm</button>
+</mat-dialog-actions>

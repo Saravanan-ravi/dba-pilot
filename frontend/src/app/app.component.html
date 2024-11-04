@@ -1,89 +1,50 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Arima:wght@300;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Trirong">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Sofia">
 <link
-  href="https://fonts.googleapis.com/css2?family=Arima:wght@200;300;500;600;700&family=Changa:wght@500&family=Russo+One&family=Secular+One&display=swap"
-  rel="stylesheet">
+    href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,100..900;1,100..900&family=Kode+Mono:wght@400..700&display=swap"
+    rel="stylesheet">
+<link
+    href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
+    rel="stylesheet">
+<div id="pastel"><img class="pastel" src="assets/pastelaesthetic.png" alt="bg"></div>
 
+<div class="container" *ngIf="isLoggedIn">
+    <ul class="navbar">
+        <li><img class="bg1" src="/assets/images/irlogo.png"></li>
+        <li class="nameUser">Hii, {{user.username}}!</li>
+        <li *ngFor="let menu of menuList" (click)="changeColor(menu)"
+            [ngClass]="{'selected': menu.isSelected, 'dropdown': menu.subMenu}">
+            <a [routerLink]="menu.hrefURL || '#'">
+                <i *ngIf="menu.icon" [ngClass]="menu.icon"></i>
+                {{ menu.navtab }}
+                <i *ngIf="menu.subMenu" class="fa fa-caret-down"></i>
+            </a>
+            <ul *ngIf="menu.subMenu" class="dropdown-content">
+                <li *ngFor="let sub of menu.subMenu">
+                    <a [routerLink]="sub.hrefURL">{{ sub.navtab }}</a>
+                </li>
+            </ul>
+        </li>
 
-<div *ngIf="isLoggedIn">
-  <a style="float: right; line-height:10px; margin: 10px;" value="Logout" (click)="logOutAlert()"><i
-      class="fa fa-sign-out" aria-hidden="true" style="font-size:20px"></i>&nbsp;Logout</a>
+    </ul>
+    <ul class="logout">
+        <li>
+            <a (click)="logOutAlert()">
+                <i class="fa fa-sign-out" aria-hidden="true"></i> Logout
+            </a>
+        </li>
+    </ul>
+</div><br>
+<div class="containerShort" *ngIf="isLoggedIn">
+    <marquee behavior="scroll" direction="left">Today's Text Request: {{ textCount || 0 }}, Text PNRs: {{ grandtotaltext || 0 }}, Total PDFs: {{ countPDF || 0 }}, Number of PDF page(s): {{ PDFcount || 0}}.</marquee>
 </div>
-<!-- <div *ngIf="isLoggedIn">
-  <button class="bottom" (click)="returnBottom()">Go To Bottom <i class="fa fa-arrow-down"
-      aria-hidden="true"></i></button>
-</div> -->
 
-<script src="https://kit.fontawesome.com/f908fb3213.js" crossorigin="anonymous"></script>
-<div *ngIf="isLoggedIn">
 
-  <div id="nav-bar" #navbar>
-    <input #navToggle id="nav-toggle" type="checkbox" />
-    <div id="nav-header" #navHeader><a id="nav-title" #navTitle href="#"><i class="fa-brands fa-codepen"></i><span
-          style="font-size: 14px; color: #FFFFF0;">&nbsp;Hey, {{dudename}}</span></a>
-      <label for="nav-toggle"><i class="fas fa-sliders-h"></i></label>
-      <hr />
-    </div>
-    <div id="nav-content" #navContent>
-      <div class="nav-button" (click)="notification();">&nbsp;<i
-          class="fa-solid fa-bell"></i><span>&nbsp;Notifications</span></div>
-      <div class="nav-button" (click)="status();">&nbsp;<i
-          class="fa-solid fa-bars-progress"></i><span>&nbsp;Status</span></div>
-      <div class="nav-button" (click)="reports();">&nbsp;<i
-          class="fa-solid fa-file-invoice"></i><span>&nbsp;Reports</span></div>
-      <div class="nav-button" (click)="customReports();">&nbsp;<i
-          class="fa-solid fa-sheet-plastic"></i><span>&nbsp;Customised Reports</span></div>
-      <div class="nav-button" (click)="activation();">&nbsp;<i
-          class="fa-solid fa-person-circle-check"></i><span>&nbsp;User Activation</span></div>
-      <hr />
-      <div class="nav-button" (click)="icms();">&nbsp;<i class="fa-solid fa-business-time"></i><span>&nbsp;ICMS</span>
-      </div>
-      <div class="nav-button" (click)="ntes();">&nbsp;<i class="fa-solid fa-train"></i><span>&nbsp;NTES</span></div>
-      <div class="nav-button" (click)="irctc();">&nbsp;<i class="fa-solid fa-ticket"></i><span>&nbsp;IRCTC</span></div>
-      <div class="nav-button" (click)="primes();">&nbsp;<i class="fa-solid fa-database"></i><span>&nbsp;PRIMES</span>
-      </div>
-      <div class="nav-button" (click)="govdotin();">&nbsp;<i
-          class="fa-solid fa-envelopes-bulk"></i><span>&nbsp;GOV.IN</span>
-      </div>
-      <hr />
-      <div class="nav-button" (click)="techies();">&nbsp;&nbsp;<i class="fa-solid fa-people-group"></i><span>&nbsp;IT
-          Team</span></div>
-      <div id="nav-content-highlight" #navContenthighlight></div>
-    </div>
-    <input id="nav-footer-toggle" type="checkbox" #navfootertoggle (click)="cancelAutoClose();" />
-    <div id="nav-footer" #navfooter>
-      <div id="nav-footer-heading" #navfooterheading>
-        <div id="nav-footer-avatar" #navfooteravatar>
-          <!-- <img src="https://gravatar.com/avatar/4474ca42d303761c2901fa819c4f2547" /> -->
-          <img src="assets/images/dp.png" alt="">
-        </div>
-        <div id="nav-footer-titlebox" #navfootertitlebox><a id="nav-footer-title" #navfootertitle href="#"
-            target="_blank">{{username}}</a><span id="nav-footer-subtitle" #navfootersubtitl>{{roleindex}}</span></div>
-        <label for="nav-footer-toggle"><i class="fas fa-caret-up"></i></label>
-      </div>
-      <div id="nav-footer-content" #navfootercontent>
-        <p>Hey, {{greet}}</p>
-      </div>
-    </div>
-
-  </div>
+<div class="routerContent">
+    <router-outlet></router-outlet>
 </div>
-<router-outlet></router-outlet>
-<div *ngIf="isLoggedIn" class="GoToTopButton">
-  <button class="top" (click)="returnTop()"><span></span></button>
-</div>
+
 <br>
 <div class="newcopyright">
-  <p>&copy; Copyright {{CRyear}}, IT-Cell/CCM/PM, Southern Railway.</p>
+    <p>&copy; Copyright {{CRyear}}, IT-Cell/CCM/PM, Southern Railway.</p>
 </div>
-
-<!-- <div class="fthead" *ngIf="isLoggedIn">
-  <p class="footer">
-    <strong><b>&copy;</b> Copyright <span style="color: navy;"><b>{{CRyear}}</b></span>, All Rights
-      Reserved. Information Technology and Innnovation Cell, CCM/PM/O, Southern Railway®™
-    </strong>
-  </p>
-</div> -->

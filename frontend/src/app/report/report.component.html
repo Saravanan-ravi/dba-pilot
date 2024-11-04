@@ -1,0 +1,746 @@
+<div class="form-list">
+    <!-- <div class="grid-container">
+        <div class="card">
+            <span>Last Sync: {{ lastSyncTime }}</span>
+        </div>
+    </div> -->
+    <div class="grid-container">
+        <!-- First Card -->
+        <div class="card">
+            <h2>EQ Feed by Text <span class="total">Total Requests: {{forwardedWithoutPdf + returnedWithoutPdf +
+                    acceptWithoutPdf}}</span></h2>
+            <div class="content">
+                <div class="row">
+                    <span class="label">Total Request Received</span>
+                    <button class="value" (click)="onForwardedClick()"><span class="hyperValues"
+                            (click)="woPDFforwardedSyncfn();">{{forwardedWithoutPdf}}</span></button>
+                </div>
+                <div class="row">
+                    <span class="label">Total Request Returned</span>
+                    <button class="value" (click)="onReturnedClick()"><span class="hyperValues"
+                            (click)="woPDFreturnedSyncfn()">{{returnedWithoutPdf}}</span></button>
+                </div>
+                <div class="row">
+                    <span class="label">Total Request Printed</span>
+                    <button class="value" (click)="onAcceptedClick()"><span class="hyperValues"
+                            (click)="woPDFacceptedSyncfn()">{{acceptWithoutPdf}}</span></button>
+                </div><br>
+            </div>
+            <p id="Bottom" style="float: right; color: rgba(0, 0, 0, 0.308);">Last sync: {{ lastSyncTime }}</p>
+        </div>
+
+        <!-- Second Card -->
+        <div class="card">
+            <h2>EQ with PDF/IMG Details <span class="total">Total Requests: {{forwardedSinglePdf + returnedSinglePdf +
+                    acceptSinglePdf}}</span></h2>
+            <div class="content">
+                <div class="row">
+                    <span class="label">Total Request Received</span>
+                    <button class="value" (click)="onForwardedSingleClick()"><span class="hyperValues"
+                            (click)="sPDFforwardedSyncfn();">{{forwardedSinglePdf}}</span></button>
+                </div>
+                <div class="row">
+                    <span class="label">Total Request Returned</span>
+                    <button class="value" (click)="onReturnedSingleClick()"><span class="hyperValues"
+                            (click)="sPDFreturnedSyncfn()">{{returnedSinglePdf}}</span></button>
+                </div>
+                <div class="row">
+                    <span class="label">Total Request Printed</span>
+                    <button class="value" (click)="onAcceptedSingleClick()"><span class="hyperValues"
+                            (click)="sPDFacceptedSyncfn()">{{acceptSinglePdf}}</span></button>
+                </div><br>
+            </div>
+            <p id="Bottom" style="float: right; color: rgba(0, 0, 0, 0.308);">Last sync: {{ lastSyncTime }}</p>
+        </div>
+
+        <!-- Third Card -->
+        <div class="card">
+            <h2>EQ Request in Bulk PDF <span class="total">Total Requests: {{forwardedMultiplePdf +
+                    acceptMultiplePdf}}</span></h2>
+            <div class="content">
+                <div class="row">
+                    <span class="label">Total Bulk Request Received</span>
+                    <button class="value" (click)="onForwardedBulkClick(); requestForwardedPDFBulkfn()"><span
+                            class="hyperValues">{{forwardedMultiplePdf}}</span></button>
+                </div>
+                <div class="row">
+                    <span class="label">Total Bulk Request Printed</span>
+                    <button class="value" (click)="onAcceptedBulkClick(); requestAcceptedPDFBulkfn()"><span
+                            class="hyperValues">{{acceptMultiplePdf}}</span></button>
+                </div>
+                <br><br><br>
+            </div>
+            <p id="Bottom" style="float: right; color: rgba(0, 0, 0, 0.308);">Last sync: {{ lastSyncTime }}</p>
+        </div>
+
+    </div>
+    <div class="grid-container">
+
+        <!-- Fourth Card (Centered in Screen) -->
+        <!-- Conditional rendering: Show this div only when forwardedtextCounts has data -->
+        <!-- Requests Forwarded Train Wise Total -->
+        <div *ngIf="forwardedtextCounts && forwardedtextCounts.length > 0" class="card">
+            <h2>Requests Received Train Wise Total</h2>
+            <div class="content">
+                <div class="search-container">
+                    <input type="text" [(ngModel)]="searchTermForwarded" placeholder="Search by Train No"
+                        (input)="filterForwardedCounts()" />
+                </div>
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Train No</th>
+                            <th>Total Requests</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr
+                            *ngFor="let count of filteredForwardedCounts.length > 0 ? filteredForwardedCounts : forwardedtextCounts">
+                            <td>{{ count.train_number }}</td>
+                            <td><span (click)="textforwardedclasswise(count.train_number); forwardedTextEQfn()"
+                                    class="hyperValues">{{
+                                    count.count }}</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p style="float: right; color: rgba(0, 0, 0, 0.308);">Last sync: {{woPDFforwardedSync}}</p>
+        </div>
+
+        <div *ngIf="returntextCounts && returntextCounts.length > 0" class="card">
+            <h2>Requests Returned Train Wise Total</h2>
+            <div class="content">
+                <div class="search-container">
+                    <input type="text" [(ngModel)]="searchTermReturned" placeholder="Search by Train No"
+                        (input)="filterReturnedCounts()" />
+                </div>
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Train No</th>
+                            <th>Total Requests</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr
+                            *ngFor="let count of filteredReturnedCounts.length > 0 ? filteredReturnedCounts : returntextCounts">
+                            <td><span class="hyperValues">{{ count.train_number }}</span></td>
+                            <td><span class="hyperValues"
+                                    (click)="texteqreturned(count.train_number); forwardedTextEQfn();">
+                                    {{ count.count }}</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p style="float: right; color: rgba(0, 0, 0, 0.308);">Last sync: {{woPDFreturnedSync}}</p>
+        </div>
+
+        <!-- Requests Accepted Train Wise Total -->
+        <div *ngIf="acceptedtextCounts && acceptedtextCounts.length > 0" class="card">
+            <h2>Requests Printed Train Wise Total</h2>
+            <div class="content">
+                <div class="search-container">
+                    <input type="text" [(ngModel)]="searchTermAccepted" placeholder="Search by Train No"
+                        (input)="filterAcceptedCounts()" />
+                </div>
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Train No</th>
+                            <th>Total Requests</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr
+                            *ngFor="let count of filteredAcceptedCounts.length > 0 ? filteredAcceptedCounts : acceptedtextCounts">
+                            <td><span class="hyperValues"></span>{{ count.train_number }}</td>
+                            <td><span class="hyperValues"
+                                    (click)="acceptedtexttrainwise(count.train_number); forwardedTextEQfn()">{{
+                                    count.count }}</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p style="float: right; color: rgba(0, 0, 0, 0.308);">Last sync: {{woPDFacceptedSync}}</p>
+        </div>
+
+        <!-- Requests Forwarded PDF/img Train Wise Total -->
+        <div *ngIf="forwardedtextCountspdf && forwardedtextCountspdf.length > 0" class="card">
+            <h2>Requests Received PDF/img Train Wise Total</h2>
+            <div class="content">
+                <div class="search-container">
+                    <input type="text" [(ngModel)]="searchTermForwardedPDF" placeholder="Search by Train No"
+                        (input)="filterForwardedPDFCounts()" />
+                </div>
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Train No</th>
+                            <th>Total Requests</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr
+                            *ngFor="let count of filteredForwardedPDFCounts.length > 0 ? filteredForwardedPDFCounts : forwardedtextCountspdf">
+                            <td><span class="hyperValues" (click)="reqforwardedPDFwithIMGfn()">{{ count.train_number
+                                    }}</span></td>
+                            <td><span class="hyperValues"
+                                    (click)="forwardedpdftrain(count.train_number); reqforwardedPDFwithIMGfn()">{{
+                                    count.count
+                                    }}</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p style="float: right; color: rgba(0, 0, 0, 0.308);">Last sync: {{sPDFforwardedSync}}</p>
+        </div>
+
+        <!-- Requests Returned PDF/img Train Wise Total -->
+        <div *ngIf="returntextCountspdf && returntextCountspdf.length > 0" class="card">
+            <h2>Requests Returned PDF/img Train Wise Total</h2>
+            <div class="content">
+                <div class="search-container">
+                    <input type="text" [(ngModel)]="searchTermReturnedPDF" placeholder="Search by Train No"
+                        (input)="filterReturnedPDFCounts()" />
+                </div>
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Train No</th>
+                            <th>Total Requests</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr
+                            *ngFor="let count of filteredReturnedPDFCounts.length > 0 ? filteredReturnedPDFCounts : returntextCountspdf">
+                            <td><span class="hyperValues">{{ count.train_number }}</span></td>
+                            <td><span class="hyperValues" (click)="returnedpdftrain(count.train_number)">{{ count.count
+                                    }}</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p style="float: right; color: rgba(0, 0, 0, 0.308);">Last sync: {{sPDFreturnedSync}}</p>
+        </div>
+
+        <!-- Requests Accepted PDF/img Train Wise Total -->
+        <div *ngIf="acceptedtextCountspdf && acceptedtextCountspdf.length > 0" class="card">
+            <h2>Requests Printed PDF/img Train Wise Total</h2>
+            <div class="content">
+                <div class="search-container">
+                    <input type="text" [(ngModel)]="searchTermAcceptedPDF" placeholder="Search by Train No"
+                        (input)="filterAcceptedPDFCounts()" />
+                </div>
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Train No</th>
+                            <th>Total Requests</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr
+                            *ngFor="let count of filteredAcceptedPDFCounts.length > 0 ? filteredAcceptedPDFCounts : acceptedtextCountspdf">
+                            <td><span class="hyperValues">{{ count.train_number }}</span></td>
+                            <td><span class="hyperValues" (click)="acceptedpdftrain(count.train_number)">{{ count.count
+                                    }}</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p style="float: right; color: rgba(0, 0, 0, 0.308);">Last sync: {{sPDFacceptedSync}}</p>
+        </div>
+
+        <!-- Requests Forwarded PDF/img Bulk -->
+        <div *ngIf="forwardedtextCountspdfmultiple && forwardedtextCountspdfmultiple.length > 0" class="card">
+            <h2>Requests Received PDF/img Bulk</h2>
+            <div class="content">
+
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Primary ID</th>
+                            <th>PDF</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let count of forwardedtextCountspdfmultiple">
+                            <td><span class="hyperValues" (click)="requestForwardedPDFBulkfn();">{{ count.primaryid
+                                    }}</span></td>
+                            <td>
+                                <span style="color: maroon;" (click)="acceptAndPrint1(count)">
+                                    <i class="fa-solid fa-file-pdf"></i>
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p style="float: right; color: rgba(0, 0, 0, 0.308);">Last sync: {{reqForwardedPDFBulk}}</p>
+        </div>
+
+        <!-- Requests Accepted PDF/img Bulk -->
+        <div *ngIf="acceptedtextCountspdfmultiple && acceptedtextCountspdfmultiple.length > 0" class="card">
+            <h2>Requests Printed PDF/img Bulk</h2>
+            <div class="content">
+                <div class="search-container">
+                    <input type="text" [(ngModel)]="searchTermAcceptedBulk" placeholder="Search by Primary ID"
+                        (input)="filterAcceptedBulkCounts()" />
+                </div>
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Primary ID</th>
+                            <th>PDF</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr
+                            *ngFor="let count of filteredAcceptedBulkCounts.length > 0 ? filteredAcceptedBulkCounts : acceptedtextCountspdfmultiple">
+                            <td><span class="hyperValues" (click)="requestAcceptedPDFBulkfn()">{{ count.primaryid
+                                    }}</span></td>
+                            <td>
+                                <span style="color: maroon;" (click)="acceptAndPrint1(count)">
+                                    <i class="fa-solid fa-file-pdf"></i>
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p style="float: right; color: rgba(0, 0, 0, 0.308);">Last sync: {{reqAcceptedPDFBulk}}</p>
+        </div>
+
+        <!-- Single PDF Train Details -->
+        <div *ngIf="singlepdftrain && singlepdftrain.length > 0" class="card">
+            <h2>Received PDF/IMG Details: {{ trainsinglepdf }}</h2>
+            <div class="content">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>PDF Icon</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr
+                            *ngFor="let item of filteredSinglePDFTrain.length > 0 ? filteredSinglePDFTrain : singlepdftrain">
+                            <td>{{ item.createdAt | date: 'dd/MM/yyyy' }}</td>
+                            <td>{{ item.createdAt | date: 'HH:mm' }}</td>
+                            <td>
+                                <span style="color: maroon;" (click)="acceptAndPrint1(item); scrollToModal()">
+                                    <i class="fa-solid fa-file-pdf"></i>
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div><br><br>
+            <p style="float: right; color: rgba(0, 0, 0, 0.308);">Last sync: {{reqforwardedPDFwithIMG}}</p>
+        </div>
+
+        <div *ngIf="singlereturnedpdftrain1 && singlereturnedpdftrain1.length > 0" class="card">
+            <h2>Returned PDF/IMG Details: {{ trainsinglepdf }}</h2>
+            <div class="content">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>PDF Icon</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of singlereturnedpdftrain1">
+                            <td>{{ item.createdAt | date: 'dd/MM/yyyy' }}</td>
+                            <td><span class="hyperValues"></span></td>
+                            <td>
+                                <span style="color: maroon;" (click)="acceptAndPrint1(item)">
+                                    <i class="fa-solid fa-file-pdf"></i>
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+        <div *ngIf="singleacceptedpdftrain && singleacceptedpdftrain.length > 0" class="card">
+            <h2>Printed PDF/IMG Details: {{ trainsinglepdf }}</h2>
+            <div class="content">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>PDF Icon</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of singleacceptedpdftrain">
+                            <td><span class="hyperValues">{{ item.createdAt | date: 'dd/MM/yyyy' }}</span></td>
+                            <td><span class="hyperValues">{{ item.createdAt | date: 'HH:mm' }}</span></td>
+                            <td>
+                                <span style="color: maroon;" (click)="acceptAndPrint1(item)">
+                                    <i class="fa-solid fa-file-pdf"></i>
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+        <div *ngIf="textforwardedeqrequest && textforwardedeqrequest.length > 0" class="card">
+            <h2>Received Text EQ Received for Train NO: {{ trainsinglepdf }}</h2>
+            <div class="content">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th *ngFor="let item of textforwardedeqrequest">{{ item._id
+                                }}</th>
+                            <!-- Dynamic headers based on _id -->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td *ngFor="let item of textforwardedeqrequest" ><span
+                                    (click)="trainnowithclass(trainsinglepdf,item._id); scrollToElement()" class="hyperValues">{{
+                                        item.count }}</span></td>
+                            <!-- Dynamic counts -->
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p style="float: right; color: rgba(0, 0, 0, 0.308);">Last sync: {{ forwardedTextEQ }}</p>
+        </div>
+
+
+        <div *ngIf="textreturnedeqrequestclass && textreturnedeqrequestclass.length > 0" class="card">
+            <h2>Returned Text EQ Received for Train NO: {{ trainsinglepdf }}</h2>
+            <div class="content">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th *ngFor="let item of textreturnedeqrequestclass"><span class="hyperValues">{{
+                                    item._id.class_mode }}</span></th>
+                            <!-- Dynamic headers based on _id -->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td *ngFor="let item of textreturnedeqrequestclass"><span
+                                    (click)="getClose(trainsinglepdf, item._id.class_mode); scrollToElement();" class="hyperValues">{{
+                                    item.count }}</span></td>
+                            <!-- Dynamic counts -->
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p style="float: right; color: rgba(0, 0, 0, 0.308);">Last sync: {{forwardedTextEQ}}</p>
+        </div>
+
+
+        <div *ngIf="textacceptedeqrequestclass && textacceptedeqrequestclass.length > 0" class="card">
+            <h2>Printed Text EQ Received for Train NO: {{ trainsinglepdf }}</h2>
+            <div class="content">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th *ngFor="let item of textacceptedeqrequestclass"><span class="hyperValues">{{
+                                    item._id.class_mode }}</span></th>
+                            <!-- Dynamic headers based on _id -->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td *ngFor="let item of textacceptedeqrequestclass"><span
+                                    (click)="getaccepted(trainsinglepdf, item._id.class_mode); scrollToElement();" class="hyperValues">{{
+                                    item.count }}</span>
+                            </td>
+                            <!-- Dynamic counts -->
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p style="float: right; color: rgba(0, 0, 0, 0.308);">Last sync: {{forwardedTextEQ}}</p>
+        </div>
+
+        <div class="modal__container">
+            <div class="w3-container" style="width: 50%;">
+                <div id="reasonToReturn" class="w3-modal">
+                    <div class="w3-modal-content w3-card-4 w3-animate-zoom" style="width: 50%; max-height: 95%;">
+                        <div class="close-center">
+                            <span (click)="closeReasonModal()" title="Close Modal">
+                                <strong><span style="color: white;">&times;</span></strong>
+                            </span>
+                        </div>
+                        <div class="headerModal">
+                            <div class="splInnerModal" *ngIf="reasonReturnInput"><br><br>
+                                <div class="sectioninput col-sm-4">
+                                    <label for="reason_for_return">Reason for Return:<span
+                                            class="required">*</span></label>
+                                    <input style="text-transform:uppercase" type="text" id="reason_for_return"
+                                        placeholder="Why do you want to return this application?"
+                                        name="reason_for_return" [(ngModel)]="reason_for_return" required>
+                                </div><br><br>
+                                <div>
+                                    <button type="submit" class="button" (click)="returnedContoller1()">Submit</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="modal__container">
+            <div class="w3-container" style="width: 50%;">
+                <div id="pdfOpenModal" class="w3-modal">
+                    <div class="w3-modal-content w3-card-4 w3-animate-zoom" style="width: 50%; max-height: 95%;">
+                        <div class="close-center">
+                            <span (click)="closeModal()" title="Close Modal">
+                                <strong><span style="color: white;">&times;</span></strong>
+                            </span>
+                        </div>
+                        <div class="headerModal" #targetModal>
+                            <div *ngIf="!returnInput">
+                                <div id="printsample">
+                                    <!-- Embed the PDF in an iframe or show the image -->
+                                    <ng-container *ngIf="isPdf">
+                                        <div class="pdf-container">
+                                            <iframe id="pdfViewer" [src]="pdfUrl" width="100%" height="600px"></iframe>
+                                        </div>
+                                    </ng-container>
+                                    <!-- Display the details -->
+                                    <table class="modalBottomDescription">
+                                        <tr>
+                                            <td><strong>Applied By:</strong> {{ eq_conveyed_by }}</td>
+                                            <td><strong>Designation:</strong> {{ designation }}</td>
+                                            <td><strong>Officer Mobile No:</strong> {{ offmobilenumber }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Requested By:</strong> {{ eq_requested_by }}</td>
+                                            <td><strong>Taken By:</strong> {{ eq_taken_by }}</td>
+                                            <td><strong>Mode of Receipt:</strong> {{ rece_mode }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2"><strong>Remarks:</strong> {{ showRemark }}</td>
+                                            <td><strong>Time of Received:</strong> {{ createdAt | date: 'hh:mm:ss aa'}}
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div class="splInnerModal" *ngIf="returnInput"><br><br>
+                                <div class="sectioninput col-sm-4">
+                                    <label for="reason_for_return">Reason for Return:<span
+                                            class="required">*</span></label>
+                                    <input style="text-transform:uppercase" type="text" id="reason_for_return"
+                                        placeholder="Why do you want to return this application?"
+                                        name="reason_for_return" [(ngModel)]="reason_for_return" required>
+                                </div><br><br>
+                                <div>
+                                    <button type="submit" class="button" (click)="returnedContoller()">Submit</button>
+                                </div>
+                            </div>
+
+                            <div class="innerFooter">
+                                <div class="containerDecision" *ngIf="!returnInput">
+                                    <div
+                                        *ngIf="user.role ==='Generaluser1' && status !== 'Accepted' && status !== 'Returned' && requesttype !=='multiple'">
+                                        <button class="btnAccept" (click)="acceptAndPrint()">Accept</button>
+                                        <button class="btnDecline" (click)="returnApplication()">Return</button>
+                                    </div>
+                                    <div
+                                        *ngIf="user.role ==='Generaluser1' && viewaccepted !== 'check' && status !== 'Accepted' && requesttype === 'multiple'">
+                                        <button class="btnAccept" (click)="acceptAndPrint()">Print</button>
+                                    </div><br>
+                                    <div *ngIf="user.role==='Administrator1' &&  status === 'Returned'">
+                                        <button class="btnAccept" style="background-color: navy;"
+                                            (click)="requestclosed()">Request Closed</button>
+                                    </div>
+                                </div><br>
+                            </div><br><br><br><br><br>
+                            <div class="center">
+                                <button class="buttoncloseModal" (click)="closeModal()" type="button">Close
+                                    Modal</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+
+    <div class="formMaster" *ngIf="showDecisionMaker">
+        <!-- Spinner/Progress Bar -->
+        <div *ngIf="loading">
+            <div class="progress-container">
+                <div class="spinner-container">
+                    <div class="spinner"></div>
+                </div>
+            </div>
+        </div>
+
+        <div *ngFor="let report of reports" class="form-group report-card" #targetElement>
+            <form novalidate #form="ngForm">
+                <div id="cardsview" #cardsview class="container">
+                    <div class="form-list">
+                        <!-- <button (click)="generatePDF()">Generate PDF</button> -->
+                        <!-- <h6>Status: <input disabled type="email" [value]="report.status"></h6><br> -->
+                        <div class="col-sm-6 form-group">
+                            <div class="mandatory-section">
+                                <div class="row">
+                                    <div class="sectioninput col-sm-4">
+                                        <label for="eq_conveyed_by">EQ Applied By</label>
+                                        <input type="text" [value]="report.eq_conveyed_by" disabled>
+                                    </div>
+                                    <div class="sectioninput col-sm-4">
+                                        <label for="designation">Designation</label>
+                                        <input type="text" [value]="report.designation" disabled>
+                                    </div>
+                                    <div class="sectioninput col-sm-4">
+                                        <label for="offmobilenumber">Officer Mobile Number</label>
+                                        <input type="text" [value]="report.offmobilenumber" disabled>
+                                    </div>
+                                    <div class="sectioninput col-sm-4">
+                                        <label for="eq_requested_by">EQ Request Through</label>
+                                        <input type="text" [value]="report.eq_requested_by" disabled>
+                                    </div>
+                                    <div class="sectioninput col-sm-4">
+                                        <label for="eq_taken_by">EQ Taken By</label>
+                                        <input type="text" [value]="report.eq_taken_by" disabled>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <div class="sectioninput col-sm-4">
+                                        <label for="rece_mode">Mode Of Receipt</label>
+                                        <input type="text" [value]="report.rece_mode" disabled>
+                                    </div>
+                                    <div class="sectioninput col-sm-4">
+                                        <label for="remarks">Remarks</label>
+                                        <input type="text" [value]="report.remarks" disabled>
+                                    </div>
+                                    <div class="sectioninput col-sm-4">
+                                        <label for="remarks2">Additional Remarks</label>
+                                        <input type="text" [value]="report.remarks2" disabled>
+                                    </div>
+                                    <div class="sectioninput col-sm-4">
+                                        <label for="train_number">Train Number</label>
+                                        <input type="text" [value]="report.train_number" disabled>
+                                    </div>
+                                    <div class="sectioninput col-sm-4">
+                                        <label for="createdAt">EQ Received Date/Time</label>
+                                        <input type="text" [value]="report.createdAt" disabled>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="additional-section">
+                            <br>
+                            <div class="row">
+                                <div class="sectioninput col-sm-4">
+                                    <label for="date_of_journey">JCO</label>
+                                    <input type="text" [value]="report.date_of_journey | date:'dd-MM-yyyy'" disabled>
+                                </div>
+                                <div class="sectioninput col-sm-4">
+                                    <label for="boardingdate">Boarding Date</label>
+                                    <input type="text" [value]="report.boardingdate | date:'dd-MM-yyyy'" disabled>
+                                </div>
+                                <div class="sectioninput col-sm-4">
+                                    <label for="class_mode">Class</label>
+                                    <input type="text" [value]="report.class_mode" disabled>
+                                </div>
+                                <div class="sectioninput col-sm-4">
+                                    <label for="from_stn">Source Station (From)</label>
+                                    <input type="text" [value]="report.from_stn" disabled>
+                                </div>
+                                <div class="sectioninput col-sm-4">
+                                    <label for="boarding_at">Boarding At</label>
+                                    <input type="text" [value]="report.boarding_at" disabled>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="sectioninput col-sm-4">
+                                    <label for="destination">Destination (To)</label>
+                                    <input type="text" [value]="report.destination" disabled>
+                                </div>
+                                <div class="sectioninput col-sm-4">
+                                    <label for="seat_berth">Seat/Berth</label>
+                                    <input type="text" [value]="report.seat_berth" disabled>
+                                </div>
+                                <div class="sectioninput col-sm-4">
+                                    <label for="passenger_name">Passenger Name</label>
+                                    <input type="text" [value]="report.passenger_name" disabled>
+                                </div>
+                                <div class="sectioninput col-sm-4">
+                                    <label for="no_of_passenger">No Of Passengers</label>
+                                    <input type="text" [value]="report.no_of_passenger" disabled>
+                                </div>
+                                <div class="sectioninput col-sm-4">
+                                    <label for="pass_phone_number">Passenger Phone Number</label>
+                                    <input type="text" [value]="report.pass_phone_number" disabled>
+                                </div>
+                            </div>
+                            <br>
+                            <div>
+                                <p style="text-align: left; color: rgb(168, 101, 0);"><strong>PNR(s): </strong> <span
+                                        style="color: #4d007c; font-size: 17px;">{{report.pnr_number}}</span></p>
+                            </div><br>
+                            <div class="decisionButton" *ngIf="user.role === 'Generaluser1'">
+                                <button type="button" class="buttonAccept"
+                                    (click)="textforwardedeqrequestclassaccepted.length > 0 ? eqEdit(report) : eqAccepted(report)"
+                                    *ngIf="report.status === 'Forwarded' || report.status === 'Accepted'"
+                                    [disabled]="report.status === 'Accepted' && textforwardedeqrequestclassaccepted.length === 0">
+                                    <i class="fa-solid fa-check-double"></i>&nbsp;
+                                    {{ textforwardedeqrequestclassaccepted.length > 0 ? 'Return to Controller' :
+                                    (report.status ===
+                                    'Accepted' ? 'Accepted!' : 'Accept') }}
+                                </button>
+
+                                <button type="button" class="buttonReject" (click)="eqRejected(report)"
+                                    *ngIf="report.status === 'Forwarded' || report.status === 'Returned'"
+                                    [disabled]="report.status === 'Returned'">
+                                    <i class="fa-solid fa-xmark"></i>&nbsp;
+                                    {{ report.status === 'Returned' ? 'Returned!' : 'Return' }}
+                                </button>
+                            </div>
+
+
+                            <div class="decisionButton"
+                                *ngIf="user.role==='Administrator1' && report.status === 'Returned'">
+                                <button type="button" class="buttonClose" (click)="updateClose(report);"
+                                    [disabled]="report.closed">
+                                    <i class="fa-solid fa-xmark"></i>&nbsp;{{ report.Closed ? 'Closed!' :
+                                    'Close' }}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="decisionButton" *ngIf="!loading">
+            <button *ngIf="generatePdf" class="button-52" (click)="generatePDF()"><i
+                    class="fa-solid fa-file-pdf"></i>&nbsp;
+                Generate PDF</button>
+        </div><br><br><br>
+        <div class="decisionButton" *ngIf="!loading"></div>
+        <div *ngIf="showComplete">
+            <button *ngIf="generatePdf" class="button-52" (click)="closeCardViewer()">
+                Completed!
+            </button>
+        </div>
+    </div><br><br><br>
+</div>

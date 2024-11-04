@@ -1,0 +1,598 @@
+<div class="formMaster">
+    <div class="form-group" style="margin-left: 2%; margin-right: 2%;">
+        <form novalidate #form="ngForm">            
+            <div class="container">
+                <div class="form-list">
+                    <h3 style="color: red;"><i class="fa-solid fa-triangle-exclamation"></i>&nbsp; No. of Application Returned: <strong>{{returnedWithoutPdf}}</strong></h3>
+                    <!-- <button (click)="openPopup();">POPUP</button> -->
+                    <p style="color: black; float: right; font-size: 14px;">
+                        <a (click)="openLastSeenModal();"><i class="fa-regular fa-eye"></i>&nbsp;Last Seen</a>
+                    </p>
+                    <div class="col-sm-6 form-group">
+                        <!-- Mandatory Information -->
+                        <div class="mandatory-section">
+                            <h3 class="section-title">Mandatory Information</h3>
+                            <br>
+                            <!-- First Row -->
+                            <div class="row">
+
+                                <!-- Designation -->
+                                <div class="sectioninput col-sm-4">
+                                    <label for="designation">Designation<span class="required">*</span></label>
+                                    <input style="text-transform:uppercase" type="text" placeholder="Enter Designation"
+                                        matInput [formControl]="designationsControl" [matAutocomplete]="autoDesignation"
+                                        (blur)="onDesignBlur()" [(ngModel)]="designation">
+                                    <mat-autocomplete #autoDesignation="matAutocomplete"
+                                        (optionSelected)="onDesignationSelected($event)">
+                                        <mat-option *ngFor="let desig of filteredDesignations | async" [value]="desig">
+                                            {{ desig }}
+                                        </mat-option>
+                                    </mat-autocomplete>
+                                </div>
+
+                                <!-- EQ Applied By -->
+                                <div class="sectioninput col-sm-4">
+                                    <label for="eq_conveyed_by">
+                                        EQ Applied By (Officer Name)
+                                    </label>
+                                    <input style="text-transform:uppercase" type="text"
+                                        placeholder="Enter Name Of EQ Applied By" matInput
+                                        [formControl]="conveyedControl" [matAutocomplete]="autoConveyed"
+                                        (blur)="onConveyedBlur()" required [(ngModel)]="conveyed" name="eq_conveyed_by">
+                                    <mat-autocomplete #autoConveyed="matAutocomplete"
+                                        (optionSelected)="onConveyedSelected($event)">
+                                        <mat-option *ngFor="let station of filteredconveyed | async" [value]="station">
+                                            {{ station }}
+                                        </mat-option>
+                                    </mat-autocomplete>
+                                </div>
+
+
+
+                                <!-- Officer Mobile Number -->
+                                <div class="sectioninput col-sm-4">
+                                    <label for="officerPhone">Officer Mobile Number
+                                        <span class="required">*</span></label>
+                                    <input style="text-transform:uppercase" type="number"
+                                        placeholder="Enter Officer Mobile Number" matInput
+                                        [formControl]="officerPhoneControl" [matAutocomplete]="autoOfficerPhone"
+                                        maxlength="10" onkeypress="return /[0-9a-zA-Z]/i.test(event.key)"
+                                        oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                        [ngModel]="officerPhone" (blur)="onOfficerphoneBlur()" required>
+                                    <mat-autocomplete #autoOfficerPhone="matAutocomplete"
+                                        (optionSelected)="onOfficerPhoneSelected($event)">
+                                        <mat-option *ngFor="let phone of filteredOfficerPhones | async" [value]="phone">
+                                            {{ phone }}
+                                        </mat-option>
+                                    </mat-autocomplete>
+                                    <mat-error *ngIf="officerPhoneControl.hasError('pattern')">Please enter a valid
+                                        10-digit phone number</mat-error>
+                                </div>
+
+                                <!-- Mode Of Received -->
+                                <div class="sectioninput col-sm-4">
+                                    <label for="rece_mode">
+                                        Mode Of Receipt
+                                        <span class="required">*</span>
+                                    </label>
+                                    <div class="sectioninput">
+                                        <select name="rece_mode" id="rece_mode" [(ngModel)]="rece_mode" required>
+                                            <option disabled selected>-- Select --</option>
+                                            <option value="Whats App">Whats App</option>
+                                            <option value="Telegram">Telegram</option>
+                                            <option value="Fax">Fax</option>
+                                            <option value="Phone Call">Phone Call</option>
+                                            <option value="SMS">SMS</option>
+                                            <option value="Nic Mail">Nic Mail</option>
+                                            <option value="Others">Others</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <!-- EQ Taken By
+                                <div class="sectioninput col-sm-4">
+                                    <label for="eq_taken_by">
+                                        EQ Taken By
+                                    </label>
+                                    <input style="text-transform:uppercase" type="text" placeholder="Enter Name Of EQ Taken By" matInput
+                                        [formControl]="takenControl" [matAutocomplete]="autoTaken"
+                                        (blur)="onTakenBlur()" required [(ngModel)]="taken" name="eq_taken_by">
+                                    <mat-autocomplete #autoTaken="matAutocomplete"
+                                        (optionSelected)="onTakenSelected($event)">
+                                        <mat-option *ngFor="let station of filteredtaken | async" [value]="station">
+                                            {{ station }}
+                                        </mat-option>
+                                    </mat-autocomplete>
+                                </div> -->
+                            </div>
+                            <br>
+                            <!-- Second Row -->
+                            <div class="row">
+                                <!-- EQ Requested By -->
+                                <div class="sectioninput col-sm-4">
+                                    <label for="eq_requested_by">
+                                        EQ Request Through
+                                    </label>
+                                    <input style="text-transform:uppercase" type="text"
+                                        placeholder="Enter Name Of EQ Request Through" matInput
+                                        [formControl]="requestControl" [matAutocomplete]="autoRequested"
+                                        (blur)="onRequestedBlur()" required [(ngModel)]="requested"
+                                        name="eq_requested_by">
+                                    <mat-autocomplete #autoRequested="matAutocomplete"
+                                        (optionSelected)="onRequestedSelected($event)">
+                                        <mat-option *ngFor="let station of filteredrequested | async" [value]="station">
+                                            {{ station }}
+                                        </mat-option>
+                                    </mat-autocomplete>
+                                </div>
+
+
+                                <!-- Remarks -->
+                                <div class="sectioninput col-sm-4">
+                                    <label for="remarks">
+                                        Remarks
+                                    </label>
+                                    <input style="text-transform:uppercase" type="text" id="remarks"
+                                        placeholder="Enter Remarks" name="remarks" [(ngModel)]="remarks" required>
+                                </div>
+
+                                <!-- Upload PDF -->
+                                <div class="sectioninput col-sm-4">
+                                    <label for="upload_pdf">Upload PDF</label>
+                                    <input type="file" id="upload_pdf" accept=".pdf, .jpg, .jpeg, .png" multiple
+                                        (change)="onNotifypdfSelected($event, 'notificationpdf')">
+                                    <span *ngIf="pdfname.length">Successfully Uploaded: <strong>{{pdfname.join(',
+                                            ')}}</strong></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Additional Information -->
+                        <div class="additional-section">
+                            <h3 class="section-title">Additional Information</h3>
+                            <br>
+                            <!-- First Row -->
+                            <div class="row">
+                                <!-- Train Number -->
+                                <div class="sectioninput col-sm-4">
+                                    <label for="train_number">
+                                        Train Number
+                                        <span class="required">*</span>
+                                    </label>
+                                    <input type="number" placeholder="Enter Train Number" matInput minlength="4"
+                                        maxlength="5"
+                                        oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                        [formControl]="trainControl" [matAutocomplete]="auto" (blur)="onInputBlur()"
+                                        required [(ngModel)]="train_number" name="train_number">
+                                    <mat-autocomplete #auto="matAutocomplete"
+                                        (optionSelected)="onOptionSelected($event)">
+                                        <mat-option *ngFor="let train of filteredTrains | async" [value]="train">
+                                            {{ train }}
+                                        </mat-option>
+                                    </mat-autocomplete>
+                                    <!-- <mat-error *ngIf="trainControl.hasError('required')">Train Number is required.
+                                                                </mat-error> -->
+                                    <mat-error *ngIf="trainControl.hasError('pattern')">Train Number must be 4 to 5
+                                        digits.</mat-error>
+                                </div>
+
+                                <!-- PNR Number -->
+                                <div class="sectioninput col-sm-4">
+                                    <label for="pnr_number">
+                                        PNR Number
+                                        <span class="required">*</span>
+                                    </label>
+                                    <input style="text-transform:uppercase" type="text" id="pnr_number" maxlength="10"
+                                        onkeypress="return /[0-9a-zA-Z]/i.test(event.key)"
+                                        oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                        placeholder="Enter PNR Number" name="pnr_number" [(ngModel)]="pnr_number"
+                                        pattern="^[0-9]{10}$" #pnrNumber="ngModel" required>
+
+                                    <!-- Error messages -->
+                                    <div *ngIf="pnrNumber.invalid && (pnrNumber.dirty || pnrNumber.touched)"
+                                        class="error">
+                                        <div *ngIf="pnrNumber.errors?.required">PNR Number is required.</div>
+                                        <div *ngIf="pnrNumber.errors?.pattern">PNR Number must be exactly 10 digits.
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- TSO -->
+                                <div class="sectioninput col-sm-4">
+                                    <label for="tso_date">
+                                        JCO
+                                        <span class="required">*</span>
+                                    </label>
+                                    <input type="date" id="tso_date" name="tso_date" [(ngModel)]="tso_date" required
+                                        (ngModelChange)="updateMinDate()">
+                                </div>
+
+                                <!-- JCO -->
+                                <div class="sectioninput col-sm-4">
+                                    <label for="date_of_journey">
+                                        Boarding Date
+                                    </label>
+                                    <input type="date" id="date_of_journey" name="date_of_journey"
+                                        [(ngModel)]="date_of_journey" [min]="minDate" required>
+                                </div>
+                            </div>
+                            <br>
+                            <!-- Second Row -->
+                            <div class="row">
+                                <!-- Class Mode -->
+                                <div class="sectioninput col-sm-4">
+                                    <label for="class_mode">
+                                        Class
+                                        <span class="required">*</span>
+                                    </label>
+                                    <div class="sectioninput">
+                                        <select name="class_mode" id="class_mode" [(ngModel)]="class_mode" required>
+                                            <option disabled selected>-- Select --</option>
+                                            <option value="2S">2S</option>
+                                            <option value="SL">SL</option>
+                                            <option value="CC">CC</option>
+                                            <option value="3A">3A</option>
+                                            <option value="3E">3E</option>
+                                            <option value="2A">2A</option>
+                                            <option value="1A">1A</option>
+                                            <option value="EC">EC</option>
+                                            <option value="FC">FC</option>
+                                            <option value="EV">EV</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- From Station (From) -->
+                                <div class="sectioninput col-sm-4">
+                                    <label for="from_station">
+                                        Source Station (From)
+                                        <span class="required">*</span>
+                                    </label>
+                                    <input type="text" placeholder="Enter From Station" matInput
+                                        [formControl]="SourceControl" [matAutocomplete]="autoSource"
+                                        (blur)="onsourceBlur()" required [(ngModel)]="from_station" name="from_station">
+                                    <mat-autocomplete #autoSource="matAutocomplete"
+                                        (optionSelected)="onSourceSelected($event)">
+                                        <mat-option *ngFor="let station of filteredSourceStations | async"
+                                            [value]="station.StnCode">
+                                            {{ station.StnCode }}
+                                        </mat-option>
+                                    </mat-autocomplete>
+                                    <mat-error
+                                        *ngIf="SourceControl.invalid && (SourceControl.dirty || SourceControl.touched)">
+                                        Source At is required.
+                                    </mat-error>
+                                </div>
+
+
+                                <!-- Destination (To) -->
+                                <div class="sectioninput col-sm-4">
+                                    <label for="destination">
+                                        Destination (To)
+                                        <span class="required">*</span>
+                                    </label>
+                                    <input type="text" placeholder="Enter Destination Station" matInput
+                                        [formControl]="destinationControl" [matAutocomplete]="autoDestination"
+                                        (blur)="onDestinationBlur()" required [(ngModel)]="destination"
+                                        name="destination">
+                                    <mat-autocomplete #autoDestination="matAutocomplete"
+                                        (optionSelected)="onDestinationSelected($event)">
+                                        <mat-option *ngFor="let station2 of filteredDestinationStations | async"
+                                            [value]="station2.StnCode">
+                                            {{ station2.StnCode }}
+                                        </mat-option>
+                                    </mat-autocomplete>
+                                    <mat-error
+                                        *ngIf="destinationControl.invalid && (destinationControl.dirty || destinationControl.touched)">
+                                        Destination is required.
+                                    </mat-error>
+                                </div>
+
+                                <!-- Boarding At (From) -->
+                                <div class="sectioninput col-sm-4">
+                                    <label for="boarding_at">
+                                        Boarding At
+                                    </label>
+                                    <input type="text" placeholder="Enter Boarding Station" matInput
+                                        [formControl]="boardingControl" [matAutocomplete]="autoBoarding"
+                                        (blur)="onBoardingBlur()" required [(ngModel)]="boarding_at" name="boarding_at">
+                                    <mat-autocomplete #autoBoarding="matAutocomplete"
+                                        (optionSelected)="onBoardingSelected($event)">
+                                        <mat-option *ngFor="let station1 of filteredBoardingStations | async"
+                                            [value]="station1.StnCode">
+                                            {{ station1.StnCode }}
+                                        </mat-option>
+                                    </mat-autocomplete>
+                                    <mat-error
+                                        *ngIf="boardingControl.invalid && (boardingControl.dirty || boardingControl.touched)">
+                                        Boarding At is required.
+                                    </mat-error>
+                                </div>
+                            </div>
+                            <br>
+                            <!-- Third Row -->
+                            <div class="row">
+
+                                <!-- Seat Berth -->
+                                <div class="sectioninput col-sm-4">
+                                    <label for="seat_berth">
+                                        Seat/Berth Option
+                                    </label>
+                                    <div class="sectioninput">
+                                        <input type="text" placeholder="Enter Seat/Berth" id="seat_berth"                                                                             
+                                            name="seat_berth" [(ngModel)]="seat_berth" required>
+                                    </div>
+                                </div>
+
+                                <!-- Passenger Name -->
+                                <div class="sectioninput col-sm-4">
+                                    <label for="passenger_name">
+                                        Passenger Name
+                                        <span class="required">*</span>
+                                    </label>
+                                    <input style="text-transform:uppercase" type="text" id="passenger_name"
+                                        placeholder="Enter Passenger Name" name="passenger_name"
+                                        [(ngModel)]="passenger_name" required>
+                                </div>
+
+                                <!-- No Of Passengers -->
+                                <!-- No Of Passengers -->
+                                <div class="sectioninput col-sm-4">
+                                    <label for="no_of_passengers">
+                                        No Of Berth(s)<span class="required">*</span>
+                                    </label>
+                                    <input type="number" id="no_of_passengers" name="no_of_passengers" min="1" max="20"
+                                        placeholder="Enter Number Of Passengers" [(ngModel)]="no_of_passengers"
+                                        (input)="validateInput($event)" required>
+                                </div>
+
+                                <!-- Passenger Phone Number -->
+                                <div class="sectioninput col-sm-4">
+                                    <label for="passenger_phone">
+                                        Passenger Phone Number
+                                    </label>
+                                    <input type="number" id="passenger_phone" name="passenger_phone"
+                                        placeholder="Enter Passenger Mobile Number" [(ngModel)]="passenger_phone"
+                                        maxlength="10"
+                                        oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                        required>
+                                </div>
+
+                            </div>
+                            <br>
+                            <!-- Fourth Row -->
+                            <div class="row">
+
+                                <!-- Remarks -->
+                                <div class="sectioninput col-sm-4">
+                                    <label for="remarks">
+                                        Additional Remarks
+                                    </label>
+                                    <input style="text-transform:uppercase" type="text" id="addremarks"
+                                        placeholder="Enter Additional Remarks" name="addremarks"
+                                        [(ngModel)]="addremarks" required>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div>
+                            <span class="sequence" (click)="addInputSet()"><i style="font-size: 15px;"
+                                    class="fa-solid fa-circle-plus"></i>&nbsp;Add PNR
+                                sequence</span>
+                        </div><br><br>
+                        <!-- Add Additonal PNR Number (if any) -->
+                        <div class="add-pnr-section" *ngIf="addpnrrow">
+                            <h3 class="section-title">Add Additional PNR (if any)</h3>
+                            <p style="color: red; float: right; font-size: 14px;">
+                                <a (click)="closeInputSet();"><i class="fa-solid fa-circle-xmark"></i>&nbsp;Close</a>
+                            </p>
+                            <br>
+                            <div class="row">
+                                <div class="sectioninputSequel col-sm-4">
+                                    <div *ngFor="let inputSet of inputSets; let i = index">
+                                        <div class="sequel">
+                                            <p>
+                                                <span>PNR Sequel</span>
+                                                <span style="color: #FF5F1F;"><strong>&nbsp;{{i + 1}}</strong></span>
+                                            </p>
+                                        </div>
+                                        <div class="input-set">
+                                            <div class="form-group">
+                                                <label for="additional_PNR{{i + 1}}">Add PNR</label>
+                                                <input type="text" id="additional_PNR{{i + 1}}"
+                                                    name="additional_PNR{{i + 1}}" [(ngModel)]="inputSet.additional_PNR"
+                                                    maxlength="10" required>
+                                                <div *ngIf="error && errorMsg.includes('sequence ' + (i + 1))"
+                                                    class="text-danger">
+                                                    {{errorMsg}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Remove Button -->
+                                        <div class="remove-button">
+                                            <button (click)="removeInputSet(i)" style="color: red;"><i
+                                                    class="fa-solid fa-trash"></i> Remove Sequence</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                        <!-- Error Message -->
+                        <div *ngIf="error" class="sectioninput">
+                            <span style="color: red;">{{ errorMsg }}</span>
+                        </div><br>
+
+                        <!-- Submit Button -->
+                        <div>
+                            <button type="submit" (click)="RegisterNotifyerrorCheck()" class="button">
+                                Submit
+                            </button>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<br><br><br>
+
+<div class="modal">
+    <div class="modal__container">
+        <div class="w3-container" style="width: 50%;">
+            <div id="pdfOpenModal" class="w3-modal">
+                <div class="w3-modal-content w3-card-4 w3-animate-zoom" style="width: 50%; max-height: 950px;">
+                    <div class="close-center"><br>
+                        <span onclick="document.getElementById('pdfOpenModal').style.display='none'"
+                            title="Close Modal"><strong><span style="color: white;">&times;</span></strong></span>
+                    </div>
+                    <div class="headerModal">
+                        <!-- <p><span style="color: orange;">⚠️&nbsp;</span><span style="color: red;">ALERT NOTICE</span></p> -->
+                    </div>
+                    <mat-tab-group>
+                        <mat-tab label="Last Seen">
+                            <br>
+                            <div style="padding: 10px;">
+                                <div class="innerHeader">
+                                </div>
+                                <div>
+                                    <table>
+                                        <tr>
+                                            <th>Receive Mode</th>
+                                            <th>EQ Conveyed By</th>
+                                            <th>Train Number</th>
+                                            <th>Last Seen</th>
+                                        </tr>
+                                        <tr *ngFor="let ls of lastseenjs">
+                                            <td>{{ls.rece_mode}}</td>
+                                            <td>{{ls.eq_conveyed_by}}</td>
+                                            <td>{{ls.train_number}}</td>
+                                            <td>{{ls.createdAt | date: 'hh:mm:ss a'}}</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </mat-tab>
+                        <mat-tab label="Designation Summary">
+                            <br>
+                            <div style="padding: 10px;">
+                                <div class="innerHeader">
+                                </div>
+                                <div>
+                                    <table>
+                                        <tr>
+                                            <th>Designation</th>
+                                            <th>EQ Conveyed By</th>
+                                            <th>Total EQ</th>
+
+                                        </tr>
+                                        <tr *ngFor="let ls of lastseensummary">
+                                            <td>{{ls.designation}}</td>
+                                            <td>{{ls.eq_conveyed_by}}</td>
+                                            <td (click)="conveyedby(ls)">{{ls.totalRequests}}</td>
+
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </mat-tab>
+                        <mat-tab label="Receipt Mode Summary">
+                            <br>
+                            <div style="padding: 10px;">
+                                <div class="innerHeader">
+                                </div>
+                                <div>
+                                    <table>
+                                        <tr>
+                                            <th>Receipt Mode</th>
+                                            <th>Total EQ</th>
+
+                                        </tr>
+                                        <tr *ngFor="let ls of lastseenreceiptsummary">
+                                            <td>{{ls.rece_mode}}</td>
+                                            <td>{{ls.totalRequests}}</td>
+
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </mat-tab>
+                        <mat-tab label="User Summary">
+                            <br>
+                            <div style="padding: 10px;">
+                                <div class="innerHeader">
+                                </div>
+                                <div>
+                                    <table>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Total EQ Fed</th>
+
+                                        </tr>
+                                        <tr *ngFor="let ls of lastseentotalbyuser">
+                                            <td>{{ls.eq_taken_by}}</td>
+                                            <td>{{ls.totalRequests}}</td>
+
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </mat-tab>
+                    </mat-tab-group>
+
+
+                    <div *ngIf="lastseensummary===0">
+                        <h3>No Data Available</h3>
+                    </div> <br> <br>
+                    <div class="innerFooter">
+                        <button class="buttoncloseModal"
+                            onclick="document.getElementById('pdfOpenModal').style.display='none'" type="button">OK, Got
+                            it!</button>
+                    </div><br>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- *ngIf="showEditTable" -->
+    <div class="popup-container" *ngIf="showEditTable">
+        <div class="popup-backdrop" (click)="closePopup()"></div>
+        <div class="popup-content">
+            <table>
+                <thead>
+                    <tr>
+                        <th>PNR Number/File Name</th>
+                        <th>Designation</th>
+                        <th>Conveyed By</th>
+                        <th>Officer Mobile Number</th>
+                        <th>Edit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let record of existingRecord">
+                        <td>{{ record.pnr_number ? record.pnr_number : (record.file_name || 'No File Name') }}</td>
+                        <td>
+                            <input [(ngModel)]="record.designation" />
+                        </td>
+                        <td>
+                            <input [(ngModel)]="record.conveyed_by" />
+                        </td>
+                        <td>
+                            <input [(ngModel)]="record.officer_mobile_number" />
+                        </td>
+                        <td>
+                            <button type="button" class="buttonClose" (click)="updateRecord(record)"
+                                [disabled]="record.updated" style="color: white;">
+                                {{ record.updated ? 'Updated!' : 'Update' }}
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <button style="padding: 3px; font-size: 12px; color:#FF5F1F;" (click)="closePopup()"><i
+                    class="fa-solid fa-rectangle-xmark"></i>&nbsp;Close</button>
+        </div>
+    </div>
+
+
+</div>

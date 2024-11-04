@@ -1,11 +1,11 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { SessionService } from './session.service';
+
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { IpServiceService } from './ip-service.service';
 import Swal from 'sweetalert2';
 import { UserIdleService } from 'angular-user-idle';
-
+import { Key } from 'protractor';
 
 var roleindex, Loggedusername, strip;
 
@@ -16,85 +16,162 @@ var roleindex, Loggedusername, strip;
 })
 export class AppComponent implements OnInit {
 
-  // @ViewChild('navToggleCheckbox') navToggleCheckbox: any;
-  @ViewChild('navToggle') navToggleCheckbox!: ElementRef<HTMLInputElement>;
+  menuList = [
+    // {
+    //   navtab: 'EQ',
+    //   isSelected: false,
+    //   icon: 'fa-solid fa-ticket',
+    //   subMenu: [
+    //     { navtab: 'Entry Form', hrefURL: '/entry-form' },
+    //     { navtab: 'Report', hrefURL: '/report' },
+    //     // { navtab: 'Playground', hrefURL: '/playground' },
+    //     // { navtab: 'Submenu 3', hrefURL: '/submenu3' },
+    //     // { navtab: 'Submenu 4', hrefURL: '/submenu4' }
+    //   ]
+    // },
+    // {
+    //   navtab: 'FootFall',
+    //   isSelected: false,
+    //   icon: 'fa-solid fa-shoe-prints',
+    //   subMenu: [
+    //     { navtab: 'Upload', hrefURL: '/' },
+    //     { navtab: 'Report', hrefURL: '/' },
+    //     // { navtab: 'Submenu 3', hrefURL: '/submenu3' },
+    //     // { navtab: 'Submenu 4', hrefURL: '/submenu4' }
+    //   ]
+    // },
+    {
+      navtab: 'EQ Entry-Form',
+      isSelected: false,
+      icon: 'fa-solid fa-address-card',
+      hrefURL: '/entry-form'
+    },
+    {
+      navtab: 'EQ - Receipt',
+      isSelected: false,
+      icon: 'fa-solid fa-address-card',
+      hrefURL: '/report'
+    },
+    {
+      navtab: 'MIS - Report',
+      isSelected: false,
+      icon: 'fa-solid fa-square-poll-vertical',
+      hrefURL: '/mis-report'
+    }
+  ];
 
-  constructor(private session: SessionService, private httpClient: HttpClient, private router: Router, private ip: IpServiceService, private userIdle: UserIdleService) { }
+  constructor(private session: SessionService, private httpClient: HttpClient, private router: Router, private userIdle: UserIdleService) { }
+
   CRyear: number = new Date().getFullYear();
-  autoCloseTimeout: any;
   isLoggedIn = null;
+  urlRouting: any;
   dudename;
   ipAddress: string;
   logOutTime;
   user: any = {};
+  roleindex;
+  usernav: any = [];
   resStr: any;
   resJSON: any;
   username: any;
   Loggedusername;
   EntireUserRole: any;
+  navData: any = [];
+  dayWiseData: any = [];
+  grandtotaltext: any;
+  textCount: any;
+  PDFcount: any;
+  countPDF: any;
+
   error;
   errorMsg;
-  roleindex;
+
   myDate;
   greet;
   hrs;
-  resJSN;
-  ipv4;
-  ipv6;
-  ipmac;
+
   ngOnInit() {
     this.user = this.session.getUser();
     this.isLoggedIn = this.user;
-    // this.getIP();
+    this.securedLogin();
     this.authCheck();
-    this.gtUSR();
-    this.userTimeOut();
-    this.userWelcome();
-    this.navAutoClose();
-    
+    this.loadSelectedTab();
+    this.authUser();
+    this.DayWise();
   }
 
-  navAutoClose(): void {
-    clearTimeout(this.autoCloseTimeout);
-    this.autoCloseTimeout = setTimeout(() => {
-      this.navToggleCheckbox.nativeElement.checked = false;
-    }, 800);
-    
+  authUser() {
+    this.user = this.session.getUser();
+    console.log();
+    if (this.user.role == "Administrator") {
+      this.router.navigateByUrl("/entry-form");
+      console.log("Admin to navigate entry form");
+    } if (this.user.role == "Generaluser") {
+      this.router.navigateByUrl("/report");
+      console.log("General User");
+    }
   }
 
-  cancelAutoClose(): void {
-    clearTimeout(this.autoCloseTimeout);
+  changeColor(menu: { navtab: string, icon?: string, isSelected: boolean, hrefURL: string }): void {
+    // console.log("UserSelect", menu);
+    this.menuList.forEach(item => item.isSelected = false);
+    menu.isSelected = true;
+    this.urlRouting = menu.hrefURL;
+    this.navData = menu.navtab;
+    localStorage.setItem('selectedTab', JSON.stringify(menu));
+    try {
+      this.router.navigate([this.urlRouting]);
+    } catch (error) {
+      console.error('Navigation error:', error);
+    }
+  }
+
+  loadSelectedTab(): void {
+    const savedTab = localStorage.getItem('selectedTab');
+    if (savedTab) {
+      try {
+        const menu = JSON.parse(savedTab);
+        const selectedMenu = this.menuList.find(item => item.navtab === menu.navtab);
+        if (selectedMenu) {
+          selectedMenu.isSelected = true;
+          this.urlRouting = selectedMenu.hrefURL;
+          this.navData = selectedMenu.navtab;
+        }
+      } catch (error) {
+        console.error('Error parsing saved tab from localStorage:', error);
+      }
+    }
+  }
+
+  securedLogin() {
+    try {
+      if (this.isLoggedIn == null) {
+        this.session.delUser();
+        sessionStorage.clear();
+        console.log("Session Cleared", this.user);
+        this.router.navigate(["/login"]);
+      }
+    } catch (error) {
+      console.log("Something Went Wrong in User Secured Login", error);
+    }
   }
 
   authCheck() {
     try {
-      if (this.isLoggedIn == null) {
-        this.router.navigate(["/login"]);
-      }
       this.httpClient.get("/users?token=" + this.user.token).subscribe(data => {
-        // console.log(data)
+        // console.log("user: ", data)
         this.resStr = JSON.stringify(data);
         this.resJSON = JSON.parse(this.resStr);
       }, error => {
-        // console.log(error);
+        console.log(error);
         if (error.status == 401) {
           this.session.delUser();
           window.location.href = "/login";
         }
       });
     } catch (error) {
-      console.log("Login to Continue");
+      console.log("Login to Continue", this.user.token);
     }
-  }
-
-  userTimeOut() {
-    setTimeout(() => {
-      this.navToggleCheckbox.nativeElement.checked = true;
-    }, 1500);
-    this.userIdle.startWatching();
-    this.userIdle.onTimerStart().subscribe(count => console.log(count));
-    this.userIdle.onTimeout().subscribe(() => console.log('Session Time-out!'));
-    this.userIdle.onTimeout().subscribe(() => this.logOutTimer());
   }
 
   userWelcome() {
@@ -140,40 +217,25 @@ export class AppComponent implements OnInit {
     this.userIdle.resetTimer();
   }
 
-  returnTop() {
-    //  window.scrollTo(0,0);
-    window.scroll({
-      top: 0,
-      left: 0,
-      behavior: 'smooth'
-    });
-    // console.log("i=" + this.ipAddress);
-  }
-  returnBottom() {
-    window.scrollTo(0, document.body.scrollHeight), { behavior: 'smooth' };
-  }
-  NavFunc() {
-    var x = document.getElementById("myTopnav");
-    if (x.className === "topnav") {
-      x.className += " responsive";
-    } else {
-      x.className = "topnav";
-    }
-  }
   logMeOut() {
     // const allInfo = `You've Logged Out..!`;
     // alert(allInfo);
     this.httpClient.post("/auth/logout", { token: this.user.token }).subscribe(data => {
       this.session.delUser();
-      window.location.href = "/login";
       var lgodate = new Date();
       this.logOutTime = lgodate;
       sessionStorage.clear();
+      localStorage.clear();
+      // window.location.href = "/login";
     }, error => {
       console.log(error)
+      this.session.delUser();
+      sessionStorage.clear();
+      localStorage.setItem('selectedTab', null);
       window.location.href = "/login";
     })
   }
+  
   logOutTimer() {
     Swal.fire({
       title: 'Session Time-Out! \n Please Re-login',
@@ -196,6 +258,7 @@ export class AppComponent implements OnInit {
       window.location.href = "/login";
     })
   }
+
   logOutAlert() {
     Swal.fire({
       title: 'Are you sure?',
@@ -217,70 +280,22 @@ export class AppComponent implements OnInit {
     })
   }
 
-  // geting user ip code. DO NOT DETELE
-  // UserLog() {
-  //   var myDate = new Date();
-  //   this.hrs = myDate;
-  //     this.httpClient.post("/logfile/savelog", {
-  //       UsrName: this.Loggedusername,
-  //       UsrRole: this.EntireUserRole,
-  //       UsrDate: this.hrs,
-  //       UsrIPv4: this.ipv4,
-  //       UsrIPv6: this.ipv6,
-  //       UsrMAC: this.ipmac
+  DayWise() {
+    console.log("Day Check");
+    this.httpClient.get<any>('/eqrequestapi/getDayWise').subscribe(
+      response => {
+        this.dayWiseData = response;
+        this.textCount = this.dayWiseData.countpnr;
+        this.PDFcount = this.dayWiseData.countpage;
+        this.countPDF = this.dayWiseData.countPdf;
+        this.grandtotaltext = this.dayWiseData.totalpnr;
+        console.log("DayWise", this.dayWiseData);
 
-  //     }).subscribe(data => {
-  //         console.log("USERLOG: "+data)
-  //     }, error => {
-  //       console.log(error)
-  //       this.error = true;
-  //       this.errorMsg = error.error.message;
-  //     })
-  // }
-
-  notification() {
-    this.router.navigate(['/notification']);
+      },
+      error => {
+        console.error('Error fetching status counts:', error);
+      }
+    );
   }
 
-  status() {
-    this.router.navigate(['/status']);
-  }
-
-  reports() {
-    this.router.navigate(['/reports']);
-  }
-
-  customReports() {
-    this.router.navigate(['/customised-report']);
-  }
-
-  activation() {
-    this.router.navigate(['/user-activation']);
-  }
-
-  icms(): void {
-    var url: string = 'https://icms.indianrail.gov.in/reports/';
-    window.open(url, '_blank');
-
-  }
-
-  ntes() {
-    var url: string = 'https://enquiry.indianrail.gov.in/mntes/';
-    window.open(url, '_blank');
-  }
-  irctc() {
-    var url: string = 'https://www.irctc.co.in/nget/train-search';
-    window.open(url, '_blank');
-  }
-  primes() {
-    var url: string = 'https://primes.indianrail.gov.in/PRIMES/logi';
-    window.open(url, '_blank');
-  }
-  govdotin() {
-    var url: string = 'https://email.gov.in/';
-    window.open(url, '_blank');
-  }
-  techies() {
-    this.router.navigate(['/techies']);
-  }
 }

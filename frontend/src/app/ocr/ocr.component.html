@@ -1,0 +1,13 @@
+<p>Upload Image</p>
+
+<form (submit)="onSubmit($event)">
+    <input type="file" (change)="onFileSelected($event)" />
+    <button class="button-24" type="submit" [disabled]="isProcessing">Upload</button>
+</form>
+
+<!-- <div *ngIf="isProcessing">Processing image...</div> -->
+
+<div>
+    <h3>Extracted Text:</h3>
+    <p>{{ extractedText }}</p>
+</div>

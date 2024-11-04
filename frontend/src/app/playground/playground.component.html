@@ -1,0 +1,21 @@
+<div class="mainForm">
+ <form (ngSubmit)="verifyUser()">
+  <h2>Forgot Password</h2>
+  <input type="text" placeholder="Enter PF Number" [(ngModel)]="pfNumber" name="pfNumber" required />
+  <input type="text" placeholder="Enter Username" [(ngModel)]="username" name="username" required />
+  <input type="date" [(ngModel)]="dob" name="dob" required />
+  <button type="submit">Verify</button>
+  
+  <div *ngIf="error" style="color: red;">{{ errorMsg }}</div>
+</form>
+
+<form *ngIf="userId" (ngSubmit)="resetPassword()">
+  <h2>Reset Password</h2>
+  <input type="password" placeholder="New Password" [(ngModel)]="newPassword" name="newPassword" required />
+  <input type="password" placeholder="Confirm Password" [(ngModel)]="confirmPassword" name="confirmPassword" required />
+  <button type="submit">Reset Password</button>
+  
+  <div *ngIf="error" style="color: red;">{{ errorMsg }}</div>
+</form>
+
+</div>

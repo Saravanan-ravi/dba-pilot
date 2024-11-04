@@ -1,61 +1,48 @@
 import { Injectable } from '@angular/core';
-import * as FileSaver from 'file-saver';
-import * as XLSX from 'xlsx';
+import { Observable } from 'rxjs';
+import * as xlsx from 'xlsx';
+import { HttpClient } from '@angular/common/http';
 
-const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
-const EXCEL_EXTENSION = '.xlsx';
-var todayDate;
 
-const getFileName = (name: string) => {
-  let timeSpan = new Date().toISOString();  
-  let sheetName = name || "OSOP_Reports";
-  let fileName = `${sheetName}_${timeSpan}`;
-  return {
-    sheetName,
-    fileName
-  };
-};
 @Injectable({
   providedIn: 'root'
 })
-
-
 export class ExcelService {
+  constructor(private httpClient: HttpClient) { }
 
-  constructor() { }
-  
+  // convertToJSON(binaryData: string): Observable<any> {
+  //   return new Observable((observer) => {
 
-  // public exportAsExcelFile(json: any[], excelFileName: string): void {
-    
-  //   const myworksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(json);
-  //   const myworkbook: XLSX.WorkBook = { Sheets: { 'data': myworksheet }, SheetNames: ['data'] };
-  //   const excelBuffer: any = XLSX.write(myworkbook, { bookType: 'xlsx', type: 'array' });
-  //   this.saveAsExcelFile(excelBuffer, excelFileName);
-  // }
-
-  // private saveAsExcelFile(buffer: any, fileName: string): void {
-  //   const data: Blob = new Blob([buffer], {
-  //     type: EXCEL_TYPE
+  //     const workbook = xlsx.read(binaryData, { type: 'binary', cellText: false, cellDates: true });
+  //     const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+  //     // const worksheet = workbook.Sheets['DATA CORE'];
+  //     const range = xlsx.utils.decode_range(worksheet['!ref']);
+  //     const headers = [];
+  //     for (let i = range.s.c; i <= range.e.c; i++) {
+  //       headers.push('column' + (i + 1));
+  //     }
+  //     const json = xlsx.utils.sheet_to_json(worksheet, { header: headers, range: 1, raw: false, dateNF: 'yyyy-mm-ddTHH:mm:ss.000+00:00' });
+  //     observer.next(json);
+  //     observer.complete();
+  //     console.log(json.length)
   //   });
-  //   todayDate = new Date();
-  //   FileSaver.saveAs(data, fileName + todayDate+ EXCEL_EXTENSION);
   // }
 
-  static exportTableToExcel(tableId: string, name?: string) {
-    let { sheetName, fileName } = getFileName(name);
-    let targetTableElm = document.getElementById(tableId);
-    let wb = XLSX.utils.table_to_book(targetTableElm, <XLSX.Table2SheetOpts>{
-      sheet: sheetName
+  convertToJSON(binaryData: string): Observable<any> {
+    return new Observable((observer) => {
+      const workbook = xlsx.read(binaryData, { type: 'binary', cellText: true, cellDates: true });
+      const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+      const range = xlsx.utils.decode_range(worksheet['!ref']);
+      const headers = [];
+      for (let i = range.s.c; i <= range.e.c; i++) {
+        headers.push('column' + (i + 1));
+      }
+      const json = xlsx.utils.sheet_to_json(worksheet, { header: headers, range: 1, raw: true }); // Setting raw: true to preserve the original format
+      observer.next(json);
+      observer.complete();
+      console.log(json.length);
     });
-    XLSX.writeFile(wb, `${fileName}.xlsx`);
-  }
-
-  static exportArrayToExcel(arr: any[], name?: string) {
-    let { sheetName, fileName } = getFileName(name);
-
-    var wb = XLSX.utils.book_new();
-    var ws = XLSX.utils.json_to_sheet(arr);
-    XLSX.utils.book_append_sheet(wb, ws, sheetName);
-    XLSX.writeFile(wb, `${fileName}.xlsx`);
   }
 }
+
+

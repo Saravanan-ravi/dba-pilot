@@ -1,0 +1,25 @@
+.radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px; /* Add space between radio buttons */
+  }
+  
+  
+  
+ 
+  .action-button {
+    font-size: 16px;     /* Increases button text size */
+    padding: 10px 20px;  /* Adds padding for larger button size */
+    margin: 0 5px;       /* Adds some space between buttons */
+    width: auto;         /* Adjust button width */
+  }
+  
+  mat-dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+  .radio-button {
+    font-size: 16px;     /* Increases radio button text size */
+    margin-right: 15px;  /* Adds space between radio buttons */
+  }

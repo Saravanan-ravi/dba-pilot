@@ -1,0 +1,676 @@
+<style>
+    .container {
+    display: flex;
+    place-items: center;
+    justify-content: center;
+    align-items: center;
+    height: 110vh;
+    font-family: "Chakra Petch", sans-serif;
+    /* Adjust height to cover the entire viewport */
+    width: 90%;
+    /* Adjust width to cover the entire viewport */
+    color: #FFFFF0;
+    padding: 25px;
+    box-sizing: border-box;
+    /* Ensures padding is included in width calculation */
+    margin-top: 12%;
+}
+
+label {
+    color: #0840da;
+}
+
+span {
+    color: red;
+}
+
+.sectioninput {
+    margin-bottom: 20px;
+}
+
+/* This area gives a different styling in form */
+
+.sectioninput {
+    margin-bottom: 20px;
+    display: flex;
+    /* Add this property to make the inputs side by side */
+    flex-wrap: wrap;
+    /* Allow the inputs to wrap to the next line if necessary */
+}
+
+.sectioninput>* {
+    flex: 1;
+    /* Make each input field take equal space */
+    margin-right: 10px;
+    /* Add some space between the input fields */
+}
+
+.sectioninput>*:last-child {
+    margin-right: 0;
+    /* Remove the margin for the last input field */
+}
+
+/* This area gives a different styling in form */
+
+.form-list {
+    background-color: rgba(255, 255, 255, 0.575);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    padding: 50px;
+    width: 70%;
+    border-radius: 10px;
+    box-shadow: 3px 3px 20px rgba(0, 0, 0, 0.26);
+}
+
+input,
+select {
+    width: calc(100% - 16px);
+    /* Adjust width to accommodate padding */
+    min-height: 40px;
+    padding: 2px;
+    letter-spacing: 0.5px;
+    border: 0;
+    border-bottom: 2px solid red;
+
+}
+
+input[type="date"] {
+    display: inline-block;
+    position: relative;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+    background: transparent;
+    bottom: 0;
+    color: transparent;
+    cursor: pointer;
+    height: auto;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: auto;
+}
+
+input[type="time"] {
+    position: relative;
+}
+
+input[type="time"]::-webkit-calendar-picker-indicator {
+    display: block;
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    background: transparent;
+}
+
+option {
+    background-color: #f5f6fa;
+    color: black;
+}
+
+input:valid {
+    border-bottom: 3px solid #bfaacc;
+}
+
+input:focus,
+select:focus {
+    outline: none;
+    border-bottom: 4px solid #fbcf34;
+}
+
+select {
+    width: calc(100% - 10px);
+    min-height: 38px;
+    padding: 3px;
+    letter-spacing: 0.5px;
+    /* Adjust width to accommodate padding */
+    border-bottom: 3px solid #bfaacc;
+}
+
+.button {
+    display: flex;
+    place-items: center;
+    justify-content: center;
+    align-items: center;
+    color: #ffffff;
+    background-color: #ffa500;
+    padding: 12px 25px;
+    font-size: 12px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border: 0;
+    border-radius: 2px;
+    outline: 0;
+    box-shadow: 3px 3px 20px rgba(0, 0, 0, 0.2);
+    transition: all .2s;
+}
+
+.button:hover,
+.button:active,
+.button:focus {
+    -ms-transform: scale(1.1);
+    transform: scale(1.1);
+}
+
+.input-set {
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.input-set .form-group {
+    margin-right: 10px;
+}
+
+.sequence {
+    float: right;
+    color: #f1cb3e;
+    font-weight: 500;
+}
+
+.sequence:hover {
+    color: #FFFFF0;
+}
+
+.sequel {
+    text-align: start;
+    color: #FFFFF0;
+    font-weight: 500;
+    padding-bottom: 8px;
+}
+</style>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link
+    href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
+    rel="stylesheet">
+
+<div class="formMaster">
+    <div class="form-group" style="margin-left: 10%;">
+        <form novalidate #form="ngForm">
+            <div class="container">
+                <div class="form-list">
+                    <div class="col-sm-6 form-group">
+                        <!-- Input fields for notification data -->
+
+                        <div class="sectioninput">
+                            <label for="date_of_journey">Date Of Journey<span>*</span></label>
+                            <input type="date" id="date_of_journey" name="date_of_journey">
+                        </div>
+
+                        <div class="sectioninput">
+                            <label for="train_number">Train Number<span>*</span></label>
+                            <input style="text-transform:uppercase" type="text" id="train_number"
+                                placeholder="Enter Train Number" name="train_number">
+                        </div>
+
+                        <div class="sectioninput">
+                            <label for="class_mode">Class<span>*</span></label>
+                            <div class="sectioninput">
+                                <select name="class_mode" id="class_mode">
+                                    <option disabled selected>-- Select --</option>
+                                    <option value="2S">2S</option>
+                                    <option value="SL">SL</option>
+                                    <option value="3A">3A</option>
+                                    <option value="3E">3E</option>
+                                    <option value="2A">2A</option>
+                                    <option value="1A">1A</option>
+                                    <option value="EC">EC</option>
+                                    <option value="FC">FC</option>
+                                    <option value="EV">EV</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="sectioninput">
+                            <label for="boarding_at">Boading At<span>*</span></label>
+                            <div class="sectioninput">
+                                <select name="boarding_at" id="boarding_at">
+                                    <option disabled selected>-- Select --</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="sectioninput">
+                            <label for="destination">Destination<span>*</span></label>
+                            <div class="sectioninput">
+                                <select name="destination" id="destination">
+                                    <option disabled selected>-- Select --</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="sectioninput">
+                            <label for="passenger_name">Passenger Name<span>*</span></label>
+                            <input style="text-transform:uppercase" type="text" id="passenger_name"
+                                placeholder="Enter Passenger Name" name="passenger_name">
+                        </div>
+
+                        <div class="sectioninput">
+                            <label for="pnr_number">PNR Number<span>*</span></label>
+                            <input style="text-transform:uppercase" type="text" id="pnr_number"
+                                placeholder="Enter PNR Number" name="pnr_number">
+                        </div>
+
+                        <div class="sectioninput">
+                            <label for="eq_requested_by">EQ Requested By<span>*</span></label>
+                            <input style="text-transform:uppercase" type="text" id="eq_requested_by"
+                                placeholder="Enter Name Of EQ Requested By" name="eq_requested_by">
+                        </div>
+
+                        <div class="sectioninput">
+                            <label for="eq_conveyed_by">EQ Conveyed By<span>*</span></label>
+                            <input style="text-transform:uppercase" type="text" id="eq_conveyed_by"
+                                placeholder="Enter Name Of EQ Conveyed By" name="eq_conveyed_by">
+                        </div>
+
+                        <div class="sectioninput">
+                            <label for="eq_taken_by">EQ Taken By<span>*</span></label>
+                            <input style="text-transform:uppercase" type="text" id="eq_taken_by"
+                                placeholder="Enter Name Of EQ Taken By" name="eq_taken_by">
+                        </div>
+
+                        <div class="sectioninput">
+                            <label for="remarks">Remarks<span>*</span></label>
+                            <input style="text-transform:uppercase" type="text" id="remarks" placeholder="Enter Remarks"
+                                name="remarks">
+                        </div>
+
+                        <div class="sectioninput">
+                            <label for="upload_file">Upload File</label>
+                            <mat-tab-group>
+                                <mat-tab label="Image"><br>
+                                    <label for="upload_image">Upload Image (.jpg or .png)</label>
+                                    <input type="file" id="upload_image" accept=".pdf"
+                                        (change)="onNotifypdfSelected($event, 'notificationpdf')">
+                                    <span *ngIf="pdfname">Successfully Uploaded: <strong>{{pdfname}}</strong></span>
+                                </mat-tab>
+                                <mat-tab label="PDF"><br>
+                                    <label for="upload_pdf">Upload PDF</label>
+                                    <input type="file" id="upload_pdf" accept=".pdf"
+                                        (change)="onNotifypdfSelected($event, 'notificationpdf')">
+                                    <span *ngIf="pdfname">Successfully Uploaded: <strong>{{pdfname}}</strong></span>
+                                </mat-tab>
+                            </mat-tab-group>
+                        </div>
+
+                        <!-- <div class="sectioninput">
+                            <label for="pdffilenotification">Notification PDF</label>
+                            <input type="file" id="pdffilenotification" accept=".pdf"
+                                (change)="onNotifypdfSelected($event, 'notificationpdf')">
+                            <span *ngIf="pdfname">Successfully Uploaded: <strong>{{pdfname}}</strong></span>
+                        </div> -->
+
+                        <div *ngIf="error" class="sectioninput">
+                            <span style="color: red;">{{errorMsg}}</span>
+                        </div>
+                        <!-- Button to submit the form -->
+                        <div>
+                            <button type="submit" (click)="RegisterNotifyerrorCheck()" class="button">Sumbit</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<!-- 24-09-2024 -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link
+    href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
+    rel="stylesheet">
+
+    <div class="formMaster">
+        <div class="form-group" style="margin-left: 10%;">
+            <form novalidate #form="ngForm">
+                <div class="container">
+                    <div class="form-list">
+                        <p style="color: black; float: right; font-size: 14px;">
+                            <button (click)="openLastSeenModal();">
+                                <a><i class="fa-regular fa-eye"></i>&nbsp;Last Seen</a>
+                            </button>
+                        </p>
+                        <div class="col-sm-6 form-group">
+                            <!-- Mandatory Information -->
+                            <div class="mandatory-section">
+                                <h3 class="section-title">Mandatory Information</h3>
+                                <br>
+                                <!-- First Row -->
+                                <div class="row">
+                                    <!-- EQ Conveyed By -->
+                                    <div class="sectioninput col-sm-4">
+                                        <label for="eq_conveyed_by">
+                                            EQ Conveyed By
+                                            <span class="required">*</span>
+                                        </label>
+                                        <input type="text" placeholder="Enter Name Of EQ Conveyed By" matInput
+                                            [formControl]="conveyedControl" [matAutocomplete]="autoConveyed" (blur)="onConveyedBlur()"
+                                            required [(ngModel)]="conveyed" name="eq_conveyed_by">
+                                        <mat-autocomplete #autoConveyed="matAutocomplete" (optionSelected)="onConveyedSelected($event)">
+                                            <mat-option *ngFor="let station of filteredconveyed | async" [value]="station">
+                                                {{ station }}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </div>
+                                    
+                                    <!-- EQ Requested By -->
+                                    <div class="sectioninput col-sm-4">
+                                        <label for="eq_requested_by">
+                                            EQ Requested By
+                                            <span class="required">*</span>
+                                        </label>
+                                        <input type="text" placeholder="Enter Name Of EQ Requested By" matInput
+                                            [formControl]="requestControl" [matAutocomplete]="autoRequested" (blur)="onRequestedBlur()"
+                                            required [(ngModel)]="requested" name="eq_requested_by">
+                                        <mat-autocomplete #autoRequested="matAutocomplete" (optionSelected)="onRequestedSelected($event)">
+                                            <mat-option *ngFor="let station of filteredrequested | async" [value]="station">
+                                                {{ station }}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </div>
+                                    
+                                    <!-- EQ Taken By -->
+                                    <div class="sectioninput col-sm-4">
+                                        <label for="eq_taken_by">
+                                            EQ Taken By
+                                            <span class="required">*</span>
+                                        </label>
+                                        <input type="text" placeholder="Enter Name Of EQ Taken By" matInput
+                                            [formControl]="takenControl" [matAutocomplete]="autoTaken" (blur)="onTakenBlur()"
+                                            required [(ngModel)]="taken" name="eq_taken_by">
+                                        <mat-autocomplete #autoTaken="matAutocomplete" (optionSelected)="onTakenSelected($event)">
+                                            <mat-option *ngFor="let station of filteredtaken | async" [value]="station">
+                                                {{ station }}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </div>
+                                </div>
+                                <br>
+                                <!-- Second Row -->
+                                <div class="row">
+                                    <!-- Mode Of Received -->
+                                    <div class="sectioninput col-sm-4">
+                                        <label for="rece_mode">
+                                            Mode Of Receipt
+                                            <span class="required">*</span>
+                                        </label>
+                                        <div class="sectioninput">
+                                            <select name="rece_mode" id="rece_mode" [(ngModel)]="rece_mode" required>
+                                                <option disabled selected>-- Select --</option>
+                                                <option value="Whats App">Whats App</option>
+                                                <option value="Telegram">Telegram</option>
+                                                <option value="Fax">Fax</option>
+                                                <option value="Phone Call">Phone Call</option>
+                                                <option value="SMS">SMS</option>
+                                                <option value="Nic Mail">Nic Mail</option>
+                                                <option value="Others">Others</option>
+                                            </select>
+                                        </div>
+                                    </div>
+    
+                                    <!-- Remarks -->
+                                    <div class="sectioninput col-sm-4">
+                                        <label for="remarks">
+                                            Remarks
+                                            <span class="required">*</span>
+                                        </label>
+                                        <input style="text-transform:uppercase" type="text" id="remarks"
+                                            placeholder="Enter Remarks" name="remarks" [(ngModel)]="remarks" required>
+                                    </div>
+    
+                                    <!-- Upload PDF -->
+                                    <div class="sectioninput col-sm-4">
+                                        <label for="upload_pdf">Upload PDF</label>
+                                        <input type="file" id="upload_pdf" accept=".pdf"
+                                            (change)="onNotifypdfSelected($event, 'notificationpdf')">
+                                        <span *ngIf="pdfname">Successfully Uploaded: <strong>{{pdfname}}</strong></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+    
+                            <!-- Additional Information -->
+                            <div class="additional-section">
+                                <h3 class="section-title">Additional Information</h3>
+                                <br>
+                                <!-- First Row -->
+                                <div class="row">
+                                    <!-- Train Number -->
+                                    <div class="sectioninput col-sm-4">
+                                        <label for="train_number">
+                                            Train Number
+                                            <span class="required">*</span>
+                                        </label>
+                                        <input type="number" placeholder="Enter Train Number" matInput
+                                            [formControl]="trainControl" [matAutocomplete]="auto" (blur)="onInputBlur()"
+                                            required [(ngModel)]="train_number" name="train_number">
+                                        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onOptionSelected($event)">
+                                            <mat-option *ngFor="let train of filteredTrains | async" [value]="train">
+                                                {{ train }}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                        <mat-error
+                                            *ngIf="trainControl.invalid && (trainControl.dirty || trainControl.touched)">
+                                            Train Number is required.
+                                        </mat-error>
+                                    </div>
+    
+                                    <!-- PNR Number -->
+                                    <div class="sectioninput col-sm-4">
+                                        <label for="pnr_number">
+                                            PNR Number
+                                            <span class="required">*</span>
+                                        </label>
+                                        <input style="text-transform:uppercase" type="text" id="pnr_number"
+                                            placeholder="Enter PNR Number" name="pnr_number" [(ngModel)]="pnr_number"
+                                            pattern="^[0-9]{10}$" #pnrNumber="ngModel" required>
+                                        <div *ngIf="pnrNumber.invalid && (pnrNumber.dirty || pnrNumber.touched)" class="error">
+                                            <div *ngIf="pnrNumber.errors?.required">PNR Number is required.</div>
+                                            <div *ngIf="pnrNumber.errors?.pattern">PNR Number must be exactly 10 digits.</div>
+                                        </div>
+                                    </div>
+    
+                                    <!-- Date Of Journey -->
+                                    <div class="sectioninput col-sm-4">
+                                        <label for="date_of_journey">
+                                            Date Of Journey
+                                            <span class="required">*</span>
+                                        </label>
+                                        <input type="date" id="date_of_journey" name="date_of_journey"
+                                            [(ngModel)]="date_of_journey" required>
+                                    </div>
+                                </div>
+                                <br>
+                                <!-- Second Row -->
+                                <div class="row">
+                                    <!-- Class Mode -->
+                                    <div class="sectioninput col-sm-4">
+                                        <label for="class_mode">
+                                            Class
+                                            <span class="required">*</span>
+                                        </label>
+                                        <div class="sectioninput">
+                                            <select name="class_mode" id="class_mode" [(ngModel)]="class_mode" required>
+                                                <option disabled selected>-- Select --</option>
+                                                <option value="2S">2S</option>
+                                                <option value="SL">SL</option>
+                                                <option value="3A">3A</option>
+                                                <option value="3E">3E</option>
+                                                <option value="2A">2A</option>
+                                                <option value="1A">1A</option>
+                                                <option value="EC">EC</option>
+                                                <option value="FC">FC</option>
+                                                <option value="EV">EV</option>
+                                            </select>
+                                        </div>
+                                    </div>
+    
+                                    <!-- Boarding At (From) -->
+                                    <div class="sectioninput col-sm-4">
+                                        <label for="boarding_at">
+                                            Boarding At (From)
+                                            <span class="required">*</span>
+                                        </label>
+                                        <input type="text" placeholder="Enter Boarding Station" matInput
+                                            [formControl]="boardingControl" [matAutocomplete]="autoBoarding"
+                                            (blur)="onBoardingBlur()" required [(ngModel)]="boarding_at" name="boarding_at">
+                                        <mat-autocomplete #autoBoarding="matAutocomplete"
+                                            (optionSelected)="onBoardingSelected($event)">
+                                            <mat-option *ngFor="let station of filteredBoardingStations | async"
+                                                [value]="station.StnCode">
+                                                {{ station.StnCode }}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                        <mat-error
+                                            *ngIf="boardingControl.invalid && (boardingControl.dirty || boardingControl.touched)">
+                                            Boarding At is required.
+                                        </mat-error>
+                                    </div>
+    
+                                    <!-- Destination (To) -->
+                                    <div class="sectioninput col-sm-4">
+                                        <label for="destination">
+                                            Destination (To)
+                                            <span class="required">*</span>
+                                        </label>
+                                        <input type="text" placeholder="Enter Destination Station" matInput
+                                            [formControl]="destinationControl" [matAutocomplete]="autoDestination"
+                                            (blur)="onDestinationBlur()" required [(ngModel)]="destination"
+                                            name="destination">
+                                        <mat-autocomplete #autoDestination="matAutocomplete"
+                                            (optionSelected)="onDestinationSelected($event)">
+                                            <mat-option *ngFor="let station of filteredDestinationStations | async"
+                                                [value]="station.StnCode">
+                                                {{ station.StnCode }}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                        <mat-error
+                                            *ngIf="destinationControl.invalid && (destinationControl.dirty || destinationControl.touched)">
+                                            Destination is required.
+                                        </mat-error>
+                                    </div>
+                                </div>
+                                <br>
+                                <!-- Third Row -->
+                                <div class="row">
+                                    <!-- Passenger Name -->
+                                    <div class="sectioninput col-sm-4">
+                                        <label for="passenger_name">
+                                            Passenger Name
+                                            <span class="required">*</span>
+                                        </label>
+                                        <input style="text-transform:uppercase" type="text" id="passenger_name"
+                                            placeholder="Enter Passenger Name" name="passenger_name"
+                                            [(ngModel)]="passenger_name" required>
+                                    </div>
+    
+                                    <!-- No Of Passengers -->
+                                    <div class="sectioninput col-sm-4">
+                                        <label for="no_of_passengers">
+                                            No Of Passengers
+                                        </label>
+                                        <input type="number" id="no_of_passengers" name="no_of_passengers"
+                                            placeholder="Enter Number Of Passengers" [(ngModel)]="no_of_passengers">
+                                    </div>
+                                </div>
+                            </div>
+    
+                            <!-- Error Message -->
+                            <div *ngIf="error" class="sectioninput">
+                                <span style="color: red;">{{ errorMsg }}</span>
+                            </div><br>
+    
+                            <!-- Submit Button -->
+                            <div>
+                                <button type="submit" (click)="RegisterNotifyerrorCheck()" class="button">
+                                    Submit
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+<br><br><br>
+
+<div class="modal">
+    <div class="modal__container">
+        <div class="w3-container" style="width: 50%;">
+            <div id="pdfOpenModal" class="w3-modal">
+                <div class="w3-modal-content w3-card-4 w3-animate-zoom" style="width: 50%; max-height: 950px;">
+                    <div class="close-center"><br>
+                        <span onclick="document.getElementById('pdfOpenModal').style.display='none'"
+                            title="Close Modal"><strong><span style="color: white;">&times;</span></strong></span>
+                    </div>
+                    <div class="headerModal">
+                        <!-- <p><span style="color: orange;">⚠️&nbsp;</span><span style="color: red;">ALERT NOTICE</span></p> -->
+                    </div>
+                    <mat-tab-group>
+                        <mat-tab label="Last Seen">
+                            <br>
+                            <div style="padding: 10px;">
+                                <div class="innerHeader">
+                                </div>
+                                <div>
+                                    <table>
+                                        <tr>
+                                            <th>Receive Mode</th>
+                                            <th>EQ Conveyed By</th>
+                                            <th>Train Number</th>
+                                            <th>Last Seen</th>
+                                        </tr>
+                                        <tr *ngFor="let ls of lastseenjs">
+                                            <td>{{ls.rece_mode}}</td>
+                                            <td>{{ls.eq_conveyed_by}}</td>
+                                            <td>{{ls.train_number}}</td>
+                                            <td>{{ls.createdAt | date: 'hh:mm:ss a'}}</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </mat-tab>
+                        <mat-tab label="Summary">
+                            <br>
+                            <div style="padding: 10px;">
+                                <div class="innerHeader">
+                                </div>
+                                <div>
+                                    <table>
+                                        <tr>
+                                            <th>EQ Conveyed By</th>
+                                            <th>Total EQ</th>
+
+                                        </tr>
+                                        <tr *ngFor="let ls of lastseensummary">
+                                            <td>{{ls._id}}</td>
+                                            <td>{{ls.totalCount}}</td>
+
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </mat-tab>
+                    </mat-tab-group>
+
+
+                    <div *ngIf="lastseensummary===0">
+                        <h3>No Data Available</h3>
+                    </div> <br> <br>
+                    <div class="innerFooter">
+                        <button class="button-78" onclick="document.getElementById('pdfOpenModal').style.display='none'"
+                            type="button">OK, Got it!</button>
+                    </div><br>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

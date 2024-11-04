@@ -1,2 +1,60 @@
+<div class="form-list">
+    <h2>Last updated: <span style="color: rgb(238, 106, 66);">{{dayWiseData.Daywise | date: 'dd-MM-yyyy hh:mm
+            a'}}</span></h2><br>
+    <div class="form-list" style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;">
+        <div class="chart-wrapper" *ngIf="dayWiseData">
+            <h2>Day-wise Text/PDF Statistics (BAR)</h2><br>
+            <div class="chart-container">
+                <canvas id="MyBarChart"></canvas>
+            </div>
+        </div>
+        <div class="chart-wrapper" *ngIf="dayWiseData">
+            <h2>Day-wise Text/PDF Statistics (PIE)</h2><br>
+            <div class="chart-container">
+                <canvas id="MyPieChart"></canvas>
+            </div>
+        </div>
+        <div class="chart-wrapper" *ngIf="dayWiseData">
+            <h2>Last 5 days Text/PDF Statistics (GRAPH)</h2><br>
+            <div class="chart-container">
+                <canvas id="MyLineChart"></canvas>
+            </div>
+        </div>
+        <div class="chart-wrapper" *ngIf="dayWiseData">
+            <h2>Statistics for the Last 5 Days (As per Entry Available)</h2><br>
+            <div class="chart-container">
+                <div>
+                    <div *ngIf="dayWiseData5 && dayWiseData5.length > 0">
+                        <p style="color: red; float: left;" (click)="refresh()"><i
+                                class="fa-solid fa-arrow-rotate-right"></i>&nbsp;Refresh</p>
+                        <p style="font-size: 18px; float: right;"><span style="color: rgb(3, 133, 3);"
+                                (click)="last5DaysToExcel();"><i class="fa-solid fa-file-excel"></i></span>&nbsp;<span
+                                style="color: rgb(185, 9, 9)" (click)="last5DaysToPDF();"><i
+                                    class="fa-solid fa-file-pdf"></i></span></p>
 
-<p>Dashboard Works!</p>
+                    </div>
+                    <table>
+                        <tr>
+                            <th>Dates</th>
+                            <th>PDF Count</th>
+                            <th>Page Count</th>
+                            <th>PNR Count</th>
+                            <th>Total PNR</th>
+                        </tr>
+                        <tr *ngFor="let ls of sortDateWise">
+                            <td>{{ls.Daywise | date: 'dd-MM-yyyy'}}</td>
+                            <td>{{ls.countPdf}}</td>
+                            <td>{{ls.countpage}}</td>
+                            <td>{{ls.countpnr}}</td>
+                            <td>{{ls.totalpnr}}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="!dayWiseData">
+            <h2>GO TO ENTRY FORM</h2>
+        </div>
+    </div>
+
+</div>
